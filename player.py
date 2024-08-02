@@ -5,7 +5,6 @@ class Gears:
         self.leggings = (None)
         self.boots = (None)
         self.accessories = (None)
-        pass
         
 class Backpack: #store, display, check, destroy
     def __init__(self, slots):
@@ -27,7 +26,7 @@ class Backpack: #store, display, check, destroy
         
     def display(self):
         lst = [i for i in self.items.keys()]
-        disp = ', '.join(lst)
+        disp = ', '.join(lst) #all items in backpack
         return disp
 
     def check(self, item):
