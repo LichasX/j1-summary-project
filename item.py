@@ -41,3 +41,15 @@ class Potions:
 
     def potion_buff(self, player):
         pass
+
+#Potion list
+lesser_healing_potion = Potions(["Heals 2 hp to the player", 2])
+normal_healing_potion = ["Heals 5 hp to the player", 5]
+greater_healing_potion = ["Heals 10 hp to the player ", 10]
+supreme_healing_potion = ["Heals 20 hp to the player", 20]
+
+strength_potion = Potions(["Add 10 att to the player's strength stats", 10])
+speed_potion = Potions(["Add 5 speed to the player's speed stats", 5])
+almond_potion = Potions(["Add 2 to each of the player's stat"])
+
+bleach = Potions(["Kills you instantly, toddler approved!", -9999999999999])

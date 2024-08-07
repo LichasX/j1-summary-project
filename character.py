@@ -66,8 +66,6 @@ class Enemy:
         else:
             self.health, self.attack, self.defense = 5, 1, 0
 
-
-
 player = Player("NaMe", 20)
 object1 = Object("Object1", 7, "Object1 desc")
 player.store(object1)

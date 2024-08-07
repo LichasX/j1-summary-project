@@ -13,12 +13,14 @@ class Game:
 
     def random_map():
         dic = {}
+        enemies  = ["Brute", "Armored Gorilla", "Other"]
         for i in range(5):
             co = (randint(0, self.n-1), randint(0, self.n-1))
             if co in dic:
                 i-=1
                 continue
-            self.enemies[co] = True
+            self.enemies[co] = Enemy(enemies[randint(0, 1)])
+            map[co[0]][co[1]] = Enemy.type[0]
 
     def play():
         self.random_map()
