@@ -12,6 +12,7 @@ class Game:
             print(''.join(map[i]))
 
     def random_map():
+        dic = {}
         for i in range(5):
             co = (randint(0, self.n-1), randint(0, self.n-1))
             if co in dic:
