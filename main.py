@@ -1,6 +1,15 @@
+
 # Import statements
-import time, classes
+import random
+import item
+import classes
+#main game loop
+
+import time, character, intro
+import rng
+
 def main():
+
     print("Intro")
     player = classes.Player(str(input("What is your name?")))
     print(player)
@@ -35,3 +44,4 @@ if __name__ == "__main__":
         game.execute(actions)
         data.display(game.status())
     mud.epilogue()
+
