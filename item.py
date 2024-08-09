@@ -1,7 +1,20 @@
 import random
 
-class Weapon:
+class Item:
+    def __init__(self, data: list):# name, desc, num, spec_weight
+        self.name = data[0]
+        self.desc = data[1]
+        self.num = data[2]
+        self.weight = data[3] * self.num
+
+class Gear(Item):
+    def __init__(self, section, data: list):
+        super().__init__(data)
+        self.section = section
+
+class Weapon(Gear):
     def __init__(self, data: list):
+        self.section = 'weapon'
         self.attack = data[0]
         self.critc = data[1]
         self.name = data[2]
@@ -76,3 +89,4 @@ speed_potion = Potions(["Add 5 speed to the player's speed stats", 5])
 almond_potion = Potions(["Add 2 to each of the player's stat"])
 
 bleach = Potions(["Kills you instantly, toddler approved!", -9999999999999])
+
