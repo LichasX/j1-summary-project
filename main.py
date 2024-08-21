@@ -5,7 +5,7 @@
 import time, character, intro, game, item
 import rng
 
-"""
+
 def main():
     # Board = game.Game("Jian Lin")
     # Board.random_map()
@@ -26,8 +26,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-"""
 
-player = character.Player('Test')
-print(player.mload)
-player.unequip('weapon')
