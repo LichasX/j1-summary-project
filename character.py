@@ -34,13 +34,14 @@ class Player:
         return total >= self.mload
 
     def store(self, object):
-        if not self.backpack_isFull:
+        if not self.backpack_isFull():
             if object.name in self.items: #item present
                 self.items[object.name].num += object.num
                 
                 weight = 0
                 for item in self.items.values():
                     weight += item.weight
+            
                 if weight > self.mload:
                     print("That's too much for your bag to handle!")
                     
@@ -68,8 +69,14 @@ class Player:
             print("Unable to store. Backpack is full.")
             return False
 
-
-
+    def trash(self, object, num = 1):
+        if object in self.items:
+            self.items[object.name].num -= 1
+            if object.num == 0:
+                del self.items[object.name]
+            return True
+        return False
+        
     def display(self):
         lst = [i for i in self.items.keys()]
         disp = ', '.join(lst) #all items in backpack
@@ -95,9 +102,9 @@ class Player:
         if self.gears[gear.section] is not None:
             print(f'You already have a {gear.section} equipped.')
             return False
-            
         #else, equip that gear
         self.gears[gear.section] = gear
+        self.trash(gear)
         print(f'{gear.name} is equipped')
         return True
 
@@ -110,9 +117,9 @@ class Player:
             print(f'Backpack Full! {section} cannot be unequipped!')
             return False 
             
-        self.store(self.gears[section])
-        self.gears[section] = None
         print(f'{self.gears[section].name} unequipped')
+        self.gears[section] = None
+
         return True
 
     def combat(self, enemy: "Enemy"):
