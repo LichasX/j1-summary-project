@@ -15,7 +15,7 @@ class Player:
         self.items = {}
         self.mload = 10
 
-        self.gears: Dict[str, Any]= {
+        self.gears = {
             'helm': None, 
             'chest': None, 
             'leg': None, 
@@ -30,7 +30,6 @@ class Player:
         total = 0
         for itm in self.items.values():
             total += itm.weight
-        print(total)
         return total >= self.mload
 
     def store(self, object):
@@ -67,7 +66,6 @@ class Player:
                 
         else:
             print("Unable to store. Backpack is full.")
-            return False
 
     def trash(self, object, num = 1):
         if object in self.items:
@@ -113,14 +111,14 @@ class Player:
             print('Nothing is equipped there.')
             return False
             
-        if self.store(self.gears[section]) is False:
+        if self.backpack_isFull():
             print(f'Backpack Full! {section} cannot be unequipped!')
             return False 
-            
-        print(f'{self.gears[section].name} unequipped')
-        self.gears[section] = None
-
-        return True
+        else:    
+            self.store(self.gears[section])
+            print(f'{self.gears[section].name} unequipped')
+            self.gears[section] = None
+            return True
 
     def combat(self, enemy: "Enemy"):
         print("\n")
