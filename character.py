@@ -200,15 +200,15 @@ class Boss(Enemy):
         if damage < 0:
             damage = 1
 
-        player.health -= damage #lose health
+        player.health[0] -= damage #lose health
 
         print(f"You received {damage} damage from the {self.name}.")#print damage to player
 
 
         print(f"{player.name} current health:{player.health}") #print hp left
 
-        if player.health <= 0:
-            player.health = 0
+        if player.health[0] <= 0:
+            player.health[0] = 0
             print("You fainted. Skill Issue.")
             return -666
         else:
