@@ -1,8 +1,10 @@
-from typing import Any, Dict
-import item
 import time
 
+import item
+
+
 class Player:
+
     def __init__(self, name):
         self.name = str(name)
         self.health = 10
@@ -11,15 +13,15 @@ class Player:
         self.attack = 1
         self.speed = 1
         self.coords = (0, 0)
-        self.last_move = (0, 0) #tracks the player's position last turn
-        self.event_queue = None #stores the event that the player is moving to (e.g. enemy fight)
+        self.last_move = (0, 0)  #tracks the player's position last turn
+        self.event_queue = None  #stores the event that the player is moving to (e.g. enemy fight)
         self.items = {}
-        self.mload = 10000000000000000000000 #fuck it who cares
+        self.mload = 10000000000000000000000  #fuck it who cares
         self.gears = {
-            'helm': None, 
-            'chest': None, 
-            'leg': None, 
-            'boots': None, 
+            'helm': None,
+            'chest': None,
+            'leg': None,
+            'boots': None,
             'weapon': item.wooden_sword
         }
 
@@ -34,20 +36,20 @@ class Player:
 
     def store(self, object):
         if not self.backpack_isFull():
-            if object.name in self.items: #item present
+            if object.name in self.items:  #item present
                 self.items[object.name].num += 1
                 weight = 0
                 for item in self.items.values():
                     weight += item.weight
                 if weight > self.mload:
                     print("That's too much for your bag to handle!")
-                    self.items[object.name].num -= object.num #Take back item
+                    self.items[object.name].num -= object.num  #Take back item
                     return False
 
                 print(f'1 {object.name} has been stored')
                 return True
 
-            else: #new item
+            else:  #new item
                 self.items[object.name] = object
 
                 total = 0
@@ -64,8 +66,6 @@ class Player:
         else:
             print("Unable to store. Backpack is full.")
 
-
-
     def display_inv(self):
         print("-----\nInventory\n")
         for i in self.items.keys():
@@ -77,7 +77,7 @@ class Player:
         for i in self.gears.keys():
             print(f"{i}: {self.gears[i]}")
         print("-----\n")
-        
+
     def check(self, object):
         if item in self.items.keys():
             print(f'Name: {item}')
@@ -94,8 +94,9 @@ class Player:
             self.items[object.name].num -= 1
             if self.items[object.name].num <= 0:
                 del self.items[object.name]
+
     #Gears
-    def equip(self, gear): #accepts object class
+    def equip(self, gear):  #accepts object class
         if gear.name not in self.items:
             print("You don't have that gear!")
             return False
@@ -111,15 +112,15 @@ class Player:
         self.trash(self.gears[gear.section])
         return True
 
-    def unequip(self, section): #accepts string of equipment type
+    def unequip(self, section):  #accepts string of equipment type
         if self.gears[section] is None:
             print('Nothing is equipped there.')
             return False
 
         if self.backpack_isFull():
             print(f'Backpack Full! {section} cannot be unequipped!')
-            return False 
-        else:    
+            return False
+        else:
             self.store(self.gears[section])
             print(f'{self.gears[section].name} unequipped')
             self.gears[section] = None
@@ -133,7 +134,8 @@ class Player:
         if self.gears["weapon"].crit():
             crit = 2  # double the damage when it crits
 
-        damage = (self.gears['weapon'].attack + self.attack - enemy.defense) * crit
+        damage = (self.gears['weapon'].attack + self.attack -
+                  enemy.defense) * crit
 
         if damage <= 0:
             damage = 1
@@ -155,7 +157,8 @@ class Player:
 
 
 class Enemy:
-    def __init__(self, data: list): #name, health, defense, attack, speed
+
+    def __init__(self, data: list):  #name, health, defense, attack, speed
         self.name = data[0]
         self.health = data[1]
         self.defense = data[2]
@@ -169,18 +172,17 @@ class Enemy:
 
         print("\n")
         time.sleep(0.5)
-        damage = (self.attack - player.defense) #enemy doesn't crit
-
+        damage = (self.attack - player.defense)  #enemy doesn't crit
 
         if damage < 0:
             damage = 1
 
-        player.health -= damage #lose health
+        player.health -= damage  #lose health
 
-        print(f"You received {damage} damage from the {self.name}.")#print damage to player
+        print(f"You received {damage} damage from the {self.name}."
+              )  #print damage to player
 
-
-        print(f"{player.name} current health:{player.health}") #print hp left
+        print(f"{player.name} current health:{player.health}")  #print hp left
 
         if player.health <= 0:
             player.health = 0
@@ -189,7 +191,9 @@ class Enemy:
         else:
             return False
 
+
 class Boss(Enemy):
+
     def __init__(self, data):
         super().__init__(data)
 
@@ -199,18 +203,17 @@ class Boss(Enemy):
     def combat(self, player: "Player"):
         print("\n")
         time.sleep(0.5)
-        damage = (self.attack - player.defense) #enemy doesn't crit
-
+        damage = (self.attack - player.defense)  #enemy doesn't crit
 
         if damage < 0:
             damage = 1
 
-        player.health -= damage #lose health
+        player.health -= damage  #lose health
 
-        print(f"You received {damage} damage from the {self.name}.")#print damage to player
+        print(f"You received {damage} damage from the {self.name}."
+              )  #print damage to player
 
-
-        print(f"{player.name} current health:{player.health}") #print hp left
+        print(f"{player.name} current health:{player.health}")  #print hp left
 
         if player.health <= 0:
             player.health = 0

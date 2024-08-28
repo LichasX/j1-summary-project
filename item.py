@@ -1,7 +1,9 @@
 import random
 
+
 class Item:
-    def __init__(self, data: list):# name, num, desc, spec_weight
+
+    def __init__(self, data: list):  # name, num, desc, spec_weight
         self.name = data[0]
         self.num = data[1]
         self.desc = data[2]
@@ -9,8 +11,9 @@ class Item:
 
 
 class Armor:
-    def __init__(self, section, data: list):#name, defense, num, spec_weight
-        self.section = section #helm, chest, leg, boots
+
+    def __init__(self, section, data: list):  #name, defense, num, spec_weight
+        self.section = section  #helm, chest, leg, boots
         self.name = data[0]
         self.defense = data[1]
         self.num = data[2]
@@ -18,13 +21,14 @@ class Armor:
 
     def __repr__(self):
         return f"{self.name}"
-    
+
     def get_stats(self):
         return f"Item Description\n-----\nName: {self.name}\nDefense: {self.defense}\nItem Stack: {self.num}\nTotal Weight: {self.weight}\n-----"
 
 
 class Weapon:
-    def __init__(self, data: list):#attack, critc, name, num, spec_weight
+
+    def __init__(self, data: list):  #attack, critc, name, num, spec_weight
         self.section = 'weapon'
         self.attack = data[0]
         self.critc = data[1]
@@ -44,7 +48,6 @@ class Weapon:
             return True
         return False
 
-    
 
 #Weapon list
 #format   att, critc
@@ -61,7 +64,8 @@ diamond_sword = Weapon([25, 12, "Diamond Sword", 1, 2])
 forty_metre_long_sword = Weapon([40, 40, "40m-long-sword", 1, 40])
 
 soul_stealer = Weapon(
-    [5, 5, "Soul Stealer", 1, 0])  #steal the attack of enemy and add it to weapon's attack.
+    [5, 5, "Soul Stealer", 1,
+     0])  #steal the attack of enemy and add it to weapon's attack.
 
 #fire blade does half of the damage dealt to the enemy, last 2 turns
 
@@ -81,16 +85,19 @@ diamond_chestplate = Armor('chest', ['Diamond Chestplate', 9, 1, 8])
 diamond_leggings = Armor('leg', ['Diamond Leggings', 6, 1, 7])
 diamond_boots = Armor('boots', ['Diamond Boots', 3, 1, 4])
 
+
 class Potions:
+
     def __init__(self, data):
         self.desc = data[0]
         self.buff = data[1]
 
     def __repr__(self):
-        return self.desc 
+        return self.desc
 
     def potion_buff(self, player):
         pass
+
 
 #Potion list
 lesser_healing_potion = Potions(["Heals 2 hp to the player", 2])
@@ -104,4 +111,9 @@ almond_potion = Potions(["Add 2 to each of the player's stat", -0])
 
 bleach = Potions(["Kills you instantly, toddler approved!", -9999999999999])
 
-loot_table = [wooden_sword, stone_sword, iron_sword, steel_sword, fire_blade, ice_blade, diamond_sword, forty_metre_long_sword, iron_helmet, iron_chestplate, iron_leggings, iron_boots, diamond_helmet, diamond_chestplate, diamond_leggings, diamond_boots]
+loot_table = [
+    wooden_sword, stone_sword, iron_sword, steel_sword, fire_blade, ice_blade,
+    diamond_sword, forty_metre_long_sword, iron_helmet, iron_chestplate,
+    iron_leggings, iron_boots, diamond_helmet, diamond_chestplate,
+    diamond_leggings, diamond_boots
+]
