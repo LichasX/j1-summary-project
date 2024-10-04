@@ -14,11 +14,9 @@ class Item:
 class Armor(Item):
 
     def __init__(self, section, name: str, desc: str, defense: int, weight: float):
+        super().__init__(name, desc, weight)
         self.section = section  #helm, chest, leg, boots
-        self.name = name
-        self.desc = desc
         self.defense = defense
-        self.weight = weight
 
     def __repr__(self):
         return f"{self.name}"
@@ -27,15 +25,13 @@ class Armor(Item):
         return f"Item Description\n-----\nName: {self.name}\nDefense: {self.defense}\nItem Stack: {self.num}\nTotal Weight: {self.weight}\n-----"
 
 
-class Weapon:
+class Weapon(Item):
 
     def __init__(self, attack: int, critc: int, name: str, desc: str, weight: int):
+        super().__init__(name, desc, weight)
         self.section = 'weapon'
         self.attack = attack
         self.critc = critc
-        self.name = name
-        self.desc = desc
-        self.weight = weight
 
     def __repr__(self):
         return f"{self.name}"
@@ -50,13 +46,11 @@ class Weapon:
         return False
 
 
-class Potion:
+class Potion(Item):
 
     def __init__(self, name: str, desc: str, buff: int, weight: int):
-        self.name = name
-        self.desc = desc
+        super().__init__(name, desc, weight)
         self.buff = buff
-        self.weight = weight
 
     def __repr__(self):
         return self.desc
