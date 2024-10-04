@@ -58,30 +58,28 @@ class Game:
         #player spawn
         self.map.set_coord(0, 0, self.player)
         #boss spawn
-        while True:
-            x, y = random_coord(self.n - 1, self.n - 1)
-            if self.map.get_coord(x, y) == ".":
-                self.map.set_coord(
-                    x,
-                    y,
-                    character.Boss(["Overlord", 50, 3, 5,
-                                    0.5]  #change values as needed
-                                   ))
-                break
+        coord = self.map.random_empty_coord()
+        if not coord:
+            raise ValueError("No empty coords")
+        x, y = coord
+        self.map.set_coord(x, y, character.Boss(
+            ["Overlord", 50, 3, 5, 0.5]  #change values as needed
+        ))
         #enemies spawn
         for i in range(self.e):
-            while True:
-                x, y = random_coord(self.n - 1, self.n - 1)
-                if self.map.get_coord(x, y) == ".":
-                    self.map.set_coord(
-                        x, y,
-                        character.Enemy([
-                            "Enemy",
-                            random.randint(3, 10),
-                            random.randint(1, 2),
-                            random.randint(1, 3), 1
-                        ]))
-                    break
+            coord = self.map.random_empty_coord()
+            if not coord:
+                raise ValueError("No empty coords")
+            x, y = coord
+            self.map.set_coord(
+                x, y,
+                character.Enemy([
+                    "Enemy",
+                    random.randint(3, 10),
+                    random.randint(1, 2),
+                    random.randint(1, 3), 1
+                ])
+            )
 
     def help_cmds(self):
         return script.help
