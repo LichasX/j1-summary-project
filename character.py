@@ -146,10 +146,6 @@ class Player:
         self.defense = 0
         self.attack = 1
         self.speed = 1
-        self.coords = (0, 0)
-        self.last_move = (0, 0)  #tracks the player's position last turn
-        self.event_queue = None  #stores the event that the player is moving to (e.g. enemy fight)
-        # self.items = {}
         max_load = 10000000000000000000000
         self.items = Inventory(weight_limit=max_load)
         self.gears = {

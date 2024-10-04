@@ -65,6 +65,9 @@ class Game:
         self.e = 12  #num of enemies
         self.map = Map(self.n, self.n)
         self.player = character.Player(name)
+        self.player_coord = (0, 0)
+        self.player_last_move = None
+        self.player_next_encounter = None
         self.moveset = ["help", "gears", "equip", "unequip", "inventory", "trash"]
         self.directions = ["w", "a", "s", "d"]
 
@@ -82,6 +85,9 @@ class Game:
     def random_map(self):  #randomise events in map
         #player spawn
         self.map.set_coord(0, 0, self.player)
+        self.player_coord = (0, 0)
+        self.player_last_move = None
+        self.player_next_encounter = None
         #boss spawn
         coord = self.map.random_empty_coord()
         if not coord:
@@ -168,33 +174,28 @@ class Game:
         self.player.trash(item)
 
     def player_move(self, move: str) -> None:
-        x, y = self.player.coords
+        x, y = self.player_coord
         if move == 'w' and x > 0:
-            self.player.event_queue = self.map.get_coord(x - 1, y)
-            self.player.last_move = self.player.coords
-            self.player.coords = (x - 1, y)
+            self.move_player(x - 1, y)
         elif move == 'a' and y > 0:
-            self.player.event_queue = self.map.get_coord(x, y - 1)
-            self.player.last_move = self.player.coords
-            self.player.coords = (x, y - 1)
+            self.move_player(x, y - 1)
         elif move == 's' and x < self.n - 1:
-            self.player.event_queue = self.map.get_coord(x + 1, y)
-            self.player.last_move = self.player.coords
-            self.player.coords = (x + 1, y)
+            self.move_player(x + 1, y)
         elif move == 'd' and y < self.n - 1:
-            self.player.event_queue = self.map.get_coord(x, y + 1)
-            self.player.last_move = self.player.coords
-            self.player.coords = (x, y + 1)
+            self.move_player(x, y + 1)
 
-    def update_position(self):
-        x, y = self.player.coords
+    def move_player(self, x: int, y: int):
+        prev_x, prev_y = self.player_coord
+        self.player_next_encounter = self.map.get_coord(x, y)
+        self.player_last_move = self.player_coord
+        self.player_coord = (x, y)
         self.map.set_coord(x, y, self.player)
-        self.map.set_coord(self.player.last_move[0], self.player.last_move[1], "X")
+        self.map.set_coord(prev_x, prev_y, "X")
 
     def check_event(self):
-        if isinstance(self.player.event_queue, character.Enemy):
+        if isinstance(self.player_next_encounter, character.Enemy):
             print(script.event_encounter)
-            self.event_fight(self.player, self.player.event_queue)
+            self.event_fight(self.player, self.player_next_encounter)
         else:
             print(script.event_nothing)
 
