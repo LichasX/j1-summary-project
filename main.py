@@ -13,14 +13,14 @@ def main():
     time.sleep(1)
     print("\nwell, i dont care what your name is")
     time.sleep(2)
-    Board = game.Game("Jian Lin")
-    Board.random_map()
-    Board.printmap()
+    board = game.Game("Jian Lin")
+    board.random_map()
+    board.printmap()
     while True:
-        Board.player_input()
-        Board.update_position()
-        Board.printmap()
-        Board.check_event()
+        board.player_input()
+        board.update_position()
+        board.printmap()
+        board.check_event()
 
 
 if __name__ == "__main__":
