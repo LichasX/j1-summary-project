@@ -9,6 +9,27 @@ import script
 def random_coord(max_x: int, max_y: int) -> tuple[int, int]:
     return random.randint(0, max_x), random.randint(0, max_y)
 
+def create_boss() -> character.Boss:
+    return character.Boss(
+        name=gamedata.boss["name"],
+        health=gamedata.boss["health"],
+        attack=gamedata.boss["attack"],
+        defense=gamedata.boss["defense"],
+        speed=gamedata.boss["speed"]
+    )
+
+def create_enemy() -> character.Enemy:
+    min_health, max_health = gamedata.enemy["health"]
+    min_attack, max_attack = gamedata.enemy["attack"]
+    min_defense, max_defense = gamedata.enemy["defense"]
+    return character.Enemy(
+        name=gamedata.enemy["name"],
+        health=random.randint(min_health, max_health),
+        attack=random.randint(min_attack, max_attack),
+        defense=random.randint(min_defense, max_defense),
+        speed=gamedata.enemy["speed"]
+    )
+
 
 class Map:
 
@@ -63,29 +84,14 @@ class Game:
         if not coord:
             raise ValueError("No empty coords")
         x, y = coord
-        self.map.set_coord(x, y, character.Boss(
-            name=gamedata.boss["name"],
-            health=gamedata.boss["health"],
-            attack=gamedata.boss["attack"],
-            defense=gamedata.boss["defense"],
-            speed=gamedata.boss["speed"]
-        ))
+        self.map.set_coord(x, y, create_boss())
         #enemies spawn
         for i in range(self.e):
             coord = self.map.random_empty_coord()
             if not coord:
                 raise ValueError("No empty coords")
             x, y = coord
-            self.map.set_coord(
-                x, y,
-                character.Enemy(
-                    name=gamedata.enemy["name"],
-                    health=random.randint(gamedata.enemy["health"][0], gamedata.enemy["health"][1]),
-                    attack=random.randint(gamedata.enemy["attack"][0], gamedata.enemy["attack"][1]),
-                    defense=random.randint(gamedata.enemy["defense"][0], gamedata.enemy["defense"][1]),
-                    speed=gamedata.enemy["speed"]
-                )
-            )
+            self.map.set_coord(x, y, create_enemy())
 
     def help_cmds(self):
         return script.help
