@@ -5,22 +5,20 @@ import gamedata
 
 class Item:
 
-    def __init__(self, name: str, num: int, desc: str, spec_weight: float):
+    def __init__(self, name: str, desc: str, weight: float):
         self.name = name
-        self.num = num
         self.desc = desc
-        self.weight = spec_weight * self.num
+        self.weight = weight
 
 
-class Armor:
+class Armor(Item):
 
-    def __init__(self, section, name: str, defense: int, num: int,
-                 spec_weight: float):  #name, defense, num, spec_weight
+    def __init__(self, section, name: str, desc: str, defense: int, weight: float):
         self.section = section  #helm, chest, leg, boots
         self.name = name
+        self.desc = desc
         self.defense = defense
-        self.num = num
-        self.weight = spec_weight * self.num
+        self.weight = weight
 
     def __repr__(self):
         return f"{self.name}"
@@ -31,14 +29,13 @@ class Armor:
 
 class Weapon:
 
-    def __init__(self, attack: int, critc: int, name: str, num: int,
-                 weight: int):
+    def __init__(self, attack: int, critc: int, name: str, desc: str, weight: int):
         self.section = 'weapon'
         self.attack = attack
         self.critc = critc
         self.name = name
-        self.num = num
-        self.weight = weight * self.num
+        self.desc = desc
+        self.weight = weight
 
     def __repr__(self):
         return f"{self.name}"
@@ -55,10 +52,11 @@ class Weapon:
 
 class Potion:
 
-    def __init__(self, name: str, desc: str, buff: int):
+    def __init__(self, name: str, desc: str, buff: int, weight: int):
         self.name = name
         self.desc = desc
         self.buff = buff
+        self.weight = weight
 
     def __repr__(self):
         return self.desc
