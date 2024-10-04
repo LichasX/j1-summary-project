@@ -2,6 +2,11 @@ import time
 
 import item
 
+OK = 1
+ERROR = 0
+
+Result = tuple[int, str]
+
 
 class Slot:
     """A slot in inventory stores one item type alongside a count"""
@@ -17,30 +22,32 @@ class Slot:
     def is_empty(self) -> bool:
         return self.count == 0
 
-    def add(self, count: int = 1) -> bool:
+    def add(self, count: int = 1) -> Result:
         """Adds count to slot.
         Returns True if successful, otherwise False.
         """
-        if not self.can_add(count):
-            return False
+        status, msg = self.can_add(count)
+        if status == ERROR:
+            return status, msg
         self.count += count
-        return True
+        return (OK, f"{count} {self.item.name} added.")
 
-    def can_add(self, count: int = 1) -> bool:
+    def can_add(self, count: int = 1) -> Result:
         """Returns True if there is space in the slot for count items"""
-        return (
-            self.limit is not None
-            and self.count + count > self.limit
-        )
+        if self.limit is None:
+            return (OK, "Item can be added")
+        if self.count + count > self.limit:
+            return (ERROR, f"Cannot hold more than {self.limit} item(s)")
+        return (OK, "Item can be added")
 
-    def remove(self, count: int = 1) -> bool:
+    def remove(self, count: int = 1) -> Result:
         """Removes count from slot.
         Returns True if successful, otherwise False.
         """
         if self.count < count:
-            return False
+            return (ERROR, f"There are fewer than {count} item(s)")
         self.count -= count
-        return True
+        return (OK, f"{count} {self.item.name} removed.")
 
     def gross_weight(self) -> int:
         """Gross weight of slot"""
@@ -57,12 +64,12 @@ class Inventory:
         """Gross weight of inventory"""
         return sum(slot.gross_weight() for slot in self.slots.values())
 
-    def can_store(self, item, count: int = 1) -> bool:
+    def can_store(self, item, count: int = 1) -> Result:
         """Returns True if inventory can store item with count"""
         if self.gross_weight() + item.weight * count > self.weight_limit:
-            return False
+            return (ERROR, "Will exceed backpack capacity")
         if item.name not in self.slots:
-            return True
+            return (OK, "Item can be stored")
         return  self.slots[item.name].can_add(count)
 
     def has(self, object) -> bool:
@@ -73,27 +80,26 @@ class Inventory:
         """Returns True if inventory is full, otherwise False"""
         return self.gross_weight() >= self.weight_limit
 
-    def store(self, object) -> bool:
+    def store(self, object) -> Result:
         """Add object to inventory.
         Returns True if successful, otherwise False.
         """
-        if not self.can_store(object):
-            return False
         if object.name not in self.slots.keys():
             self.slots[object.name] = Slot(object)
-        if not self.slots[object.name].add(1):
-            return False
-        return True
+        status, msg = self.slots[object.name].add(1)
+        if status == ERROR:
+            if self.slots[object.name].is_empty():
+                del self.slots[object.name]
+        return status, msg
 
-    def trash(self, object) -> bool:
+    def trash(self, object) -> Result:
         """Remove object from inventory"""
         if not self.has(object):
-            return False
-        if not self.slots[object.name].remove(1):
-            return False
-        if self.slots[object.name].is_empty():
+            return (ERROR, f"No {object.name} in backpack")
+        status, msg = self.slots[object.name].remove(1)
+        if status == OK and self.slots[object.name].is_empty():
             del self.slots[object.name]
-        return True
+        return status, msg
 
 
 class Player:
@@ -126,17 +132,9 @@ class Player:
         return self.items.is_full()
 
     def store(self, object):
-        if self.backpack_isFull():
-            print("Unable to store. Backpack is full.")
-            return False
-        if not self.items.can_store(object):
-            print("That's too much for your bag to handle!")
-            return False
-        if not self.items.store(object):
-            print("Could not store item.")
-            return False
-        print(f'{object.num} {object.name} has been stored.')
-        return True
+        status, msg = self.items.store(object)
+        print(msg)
+        return (status == OK)
 
     def display_inv(self):
         print("-----\nInventory\n")
@@ -160,14 +158,9 @@ class Player:
         return False
 
     def trash(self, object):
-        if not self.items.has(object):
-            print("Item not in Backpack")
-            return False
-        if not self.items.trash(object):
-            print("Could not remove item.")
-            return False
-        print(f'{object.num} {object.name} has been removed.')
-        return True
+        status, msg = self.items.trash(object)
+        print(msg)
+        return (status == OK)
 
     #Gears
     def equip(self, gear) -> bool:  #accepts object class
@@ -182,20 +175,22 @@ class Player:
         self.gears[gear.section].item = gear
         self.gears[gear.section].add(1)
         print(f'{gear.name} is equipped')
+        # Can ignore any errors from removing gear from backpack
         self.trash(gear)
         return True
 
     def unequip(self, section: str) -> bool:  #accepts string of equipment type
-        if self.gears[section].is_empty():
-            print('Nothing is equipped there.')
-            return False
-        if self.backpack_isFull():
-            print(f'Backpack Full! {section} cannot be unequipped!')
-            return False
         gear = self.gears[section].item
-        self.store(gear)
+        status, msg = self.items.store(gear)
+        if status == ERROR:
+            print(msg)
+            return False
+        status, msg = self.gears[section].remove(1)
+        if status == ERROR:
+            print(msg)
+            self.items.trash(gear)
+            return False
         print(f'{gear.name} unequipped')
-        self.gears[section].remove(1)
         return True
 
     def combat(self, enemy: "Enemy"):
