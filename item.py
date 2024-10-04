@@ -5,7 +5,7 @@ import gamedata
 
 class Item:
 
-    def __init__(self, name: str, desc: str, weight: float):
+    def __init__(self, name: str, desc: str, weight: int):
         self.name = name
         self.desc = desc
         self.weight = weight

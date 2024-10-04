@@ -11,7 +11,7 @@ Result = tuple[Status, str]
 
 class Slot:
     """A slot in inventory stores one item type alongside a count"""
-    def __init__(self, item, limit: int | None = None, count: int = 0):
+    def __init__(self, item: item.Item, limit: int | None = None, count: int = 0):
         self.item = item
         self.count = count
         self.limit = limit
@@ -65,7 +65,7 @@ class Inventory:
         """Gross weight of inventory"""
         return sum(slot.gross_weight() for slot in self.slots.values())
 
-    def can_store(self, item, count: int = 1) -> Result:
+    def can_store(self, item: item.Item, count: int = 1) -> Result:
         """Returns True if inventory can store item with count"""
         if self.gross_weight() + item.weight * count > self.weight_limit:
             return (ERROR, "Will exceed backpack capacity")
@@ -73,33 +73,33 @@ class Inventory:
             return (OK, "Item can be stored")
         return  self.slots[item.name].can_add(count)
 
-    def has(self, object) -> bool:
-        """Returns True if inventory contains object, otherwise False"""
-        return object.name in self.slots and not self.slots[object.name].is_empty()
+    def has(self, item: item.Item) -> bool:
+        """Returns True if inventory contains item, otherwise False"""
+        return item.name in self.slots and not self.slots[item.name].is_empty()
 
     def is_full(self) -> bool:
         """Returns True if inventory is full, otherwise False"""
         return self.gross_weight() >= self.weight_limit
 
-    def store(self, object) -> Result:
-        """Add object to inventory.
+    def store(self, item: item.Item) -> Result:
+        """Add item to inventory.
         Returns True if successful, otherwise False.
         """
-        if object.name not in self.slots.keys():
-            self.slots[object.name] = Slot(object)
-        status, msg = self.slots[object.name].add(1)
+        if item.name not in self.slots.keys():
+            self.slots[item.name] = Slot(item)
+        status, msg = self.slots[item.name].add(1)
         if status == ERROR:
-            if self.slots[object.name].is_empty():
-                del self.slots[object.name]
+            if self.slots[item.name].is_empty():
+                del self.slots[item.name]
         return status, msg
 
-    def trash(self, object) -> Result:
-        """Remove object from inventory"""
-        if not self.has(object):
-            return (ERROR, f"No {object.name} in backpack")
-        status, msg = self.slots[object.name].remove(1)
-        if status == OK and self.slots[object.name].is_empty():
-            del self.slots[object.name]
+    def trash(self, item: item.Item) -> Result:
+        """Remove item from inventory"""
+        if not self.has(item):
+            return (ERROR, f"No {item.name} in backpack")
+        status, msg = self.slots[item.name].remove(1)
+        if status == OK and self.slots[item.name].is_empty():
+            del self.slots[item.name]
         return status, msg
 
 
