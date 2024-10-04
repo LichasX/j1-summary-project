@@ -3,6 +3,76 @@ import time
 import item
 
 
+class Slot:
+    """A slot in inventory stores one item type alongside a count"""
+    def __init__(self, item, limit: int | None = None, count: int = 0):
+        self.item = item
+        self.count = count
+        self.limit = limit
+
+    def __str__(self) -> str:
+        """Name of item"""
+        return f"{self.item.name} ({self.count})"
+
+    def is_empty(self) -> bool:
+        return self.count == 0
+
+    def add(self, count: int = 1) -> bool:
+        """Adds count to slot.
+        Returns True if successful, otherwise False.
+        """
+        if self.limit is not None and self.count + count > self.limit:
+            return False
+        self.count += count
+        return True
+
+    def remove(self, count: int = 1) -> bool:
+        """Removes count from slot.
+        Returns True if successful, otherwise False.
+        """
+        if self.count < count:
+            return False
+        self.count -= count
+        return True
+
+    def gross_weight(self) -> int:
+        """Gross weight of slot"""
+        return self.item.weight * self.count
+
+
+
+class Inventory:
+    def __init__(self, weight_limit: int):
+        self.slots = {}
+        self.weight_limit = weight_limit
+
+    def gross_weight(self) -> int:
+        """Gross weight of inventory"""
+        return sum(slot.gross_weight() for slot in self.slots.values())
+
+    def store(self, object) -> bool:
+        """Add object to inventory.
+        Returns True if successful, otherwise False.
+        """
+        if object.weight + self.gross_weight > self.weight_limit:
+            return False
+        if object.name not in self.slots.keys():
+            self.slots[object.name] = Slot(object)
+        if not self.slots[object.name].add(1):
+            return False
+        return True
+
+    def trash(self, object) -> bool:
+        """Remove object from inventory"""
+        if object.name not in self.slots.keys():
+            return False
+        if not self.slots[object.name].remove(1):
+            return False
+        if self.slots[object.name].is_empty():
+            del self.slots[object.name]
+        return True
+
+
 class Player:
 
     def __init__(self, name):
