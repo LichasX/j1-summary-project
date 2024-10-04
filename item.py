@@ -13,19 +13,28 @@ class Item:
     def __str__(self) -> str:
         return self.name
 
+    def json(self) -> dict:
+        return {"name": self.name, "desc": self.desc, "weight": self.weight}
+
 
 class Armor(Item):
 
-    def __init__(self, section, name: str, desc: str, defense: int, weight: float):
+    def __init__(self, section, name: str, desc: str, defense: int, weight: int):
         super().__init__(name, desc, weight)
         self.section = section  #helm, chest, leg, boots
         self.defense = defense
 
-    def __repr__(self):
-        return f"{self.name}"
+    def __str__(self) -> str:
+        return f"{self.name} (defense: {self.defense})"
 
     def get_stats(self):
-        return f"Item Description\n-----\nName: {self.name}\nDefense: {self.defense}\nItem Stack: {self.num}\nTotal Weight: {self.weight}\n-----"
+        return f"Item Description\n-----\nName: {self.name}\nDefense: {self.defense}\nTotal Weight: {self.weight}\n-----"
+
+    def json(self) -> dict:
+        record = super().json()
+        record["section"] = self.section
+        record["defense"] = self.defense
+        return record
 
 
 class Weapon(Item):
@@ -36,17 +45,24 @@ class Weapon(Item):
         self.attack = attack
         self.critc = critc
 
-    def __repr__(self):
-        return f"{self.name}"
+    def __str__(self) -> str:
+        return f"{self.name} (attack: {self.attack})"
 
     def get_stats(self):
-        return f"Item Description\n-----\nName: {self.name}\nAttack: {self.attack}\nCrit Chance: {self.critc}\nItem Stack: {self.num}\nTotal Weight: {self.weight}\n-----"
+        return f"Item Description\n-----\nName: {self.name}\nAttack: {self.attack}\nCrit Chance: {self.critc}\nTotal Weight: {self.weight}\n-----"
 
     def crit(self):
         x = random.randint(1, 100)
         if x <= self.critc:
             return True
         return False
+
+    def json(self) -> dict:
+        record = super().json()
+        record["section"] = self.section
+        record["attack"] = self.attack
+        record["critc"] = self.critc
+        return record
 
 
 class Potion(Item):

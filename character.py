@@ -54,7 +54,18 @@ class Slot:
         """Gross weight of slot"""
         return self.item.weight * self.count
 
+    def json(self) -> dict:
+        """Returns a JSON-serializable dict"""
+        return {"name": self.item.name, "count": self.count}
 
+
+class GearSlot(Slot):
+    def __init__(self, item: item.Item, limit: int = 1, count: int = 0):
+        super().__init__(item, limit, count)
+
+    def json(self) -> dict:
+        """Returns a JSON-serializable dict"""
+        return {"name": self.item.name, "desc": self.item.desc}
 
 class Inventory:
     def __init__(self, weight_limit: int):
@@ -113,6 +124,10 @@ class Inventory:
         if status == OK and self.slots[item.name].is_empty():
             del self.slots[item.name]
         return status, msg
+
+    def json(self) -> list[dict]:
+        """Returns a JSON-serializable list of dicts"""
+        return [slot.json() for slot in self.slots.values()]
 
 
 class Player:
