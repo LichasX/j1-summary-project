@@ -108,7 +108,7 @@ class Player:
         self.coords = (0, 0)
         self.last_move = (0, 0)  #tracks the player's position last turn
         self.event_queue = None  #stores the event that the player is moving to (e.g. enemy fight)
-        self.items = {}
+        # self.items = {}
         max_load = 10000000000000000000000
         self.items = Inventory(weight_limit=max_load)
         self.gears = {
@@ -123,42 +123,20 @@ class Player:
         return "P"
 
     def backpack_isFull(self):
-        total = 0
-        for itm in self.items.values():
-            total += itm.weight
-        return total >= self.mload
+        return self.items.is_full()
 
     def store(self, object):
-        if not self.backpack_isFull():
-            if object.name in self.items:  #item present
-                self.items[object.name].num += 1
-                weight = 0
-                for item in self.items.values():
-                    weight += item.weight
-                if weight > self.mload:
-                    print("That's too much for your bag to handle!")
-                    self.items[object.name].num -= object.num  #Take back item
-                    return False
-
-                print(f'1 {object.name} has been stored')
-                return True
-
-            else:  #new item
-                self.items[object.name] = object
-
-                total = 0
-                for item in self.items.values():
-                    total += item.weight
-                if total > self.mload:
-                    print("That's too much for your bag to handle!")
-                    del self.items[object.name]
-                    return False
-
-                print(f'{object.num} {object.name} has been stored.')
-                return True
-
-        else:
+        if self.backpack_isFull():
             print("Unable to store. Backpack is full.")
+            return False
+        if not self.items.can_store(object):
+            print("That's too much for your bag to handle!")
+            return False
+        if not self.items.store(object):
+            print("Could not store item.")
+            return False
+        print(f'{object.num} {object.name} has been stored.')
+        return True
 
     def display_inv(self):
         print("-----\nInventory\n")
@@ -182,12 +160,14 @@ class Player:
         return False
 
     def trash(self, object):
-        if object.name not in self.items:
-            print("Invalid object entered")
-        else:
-            self.items[object.name].num -= 1
-            if self.items[object.name].num <= 0:
-                del self.items[object.name]
+        if not self.items.has(object):
+            print("Item not in Backpack")
+            return False
+        if not self.items.trash(object):
+            print("Could not remove item.")
+            return False
+        print(f'{object.num} {object.name} has been removed.')
+        return True
 
     #Gears
     def equip(self, gear) -> bool:  #accepts object class
