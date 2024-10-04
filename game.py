@@ -195,4 +195,4 @@ class Game:
             self.player.health = self.player.max_health
             reward = random.choice(item.loot_table)
             print(script.get_reward.replace("$$reward$$", reward))
-            self.player.store(reward)
+            self.player.store(item.create_item(reward))
