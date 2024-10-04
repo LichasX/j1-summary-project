@@ -2,10 +2,11 @@ import time
 
 import item
 
+Status = int
 OK = 1
 ERROR = 0
 
-Result = tuple[int, str]
+Result = tuple[Status, str]
 
 
 class Slot:
