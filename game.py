@@ -2,6 +2,7 @@ import random
 import sys
 
 import character
+import display
 import gamedata
 import item
 import script
@@ -109,9 +110,13 @@ class Game:
         if move == "help":
             print(self.help_cmds())
         elif move == "inventory":
-            self.player.display_inv()
+            display.inventory(
+                self.player.json_inventory()
+            )
         elif move == "gears":
-            self.player.display_gears()
+            display.gear(
+                self.player.json_gear()
+            )
         elif move == "equip":
             self.player_equip()
         elif move == "unequip":
@@ -123,34 +128,44 @@ class Game:
 
     def player_equip(self) -> None:
         """Equipping submenu"""
-        if not self.player.items:
+        if self.player.items.is_empty():
             print(script.invalid_equip)
             return
-        self.player.display_inv()
-        move2 = input(script.prompt_equip)
-        while move2 not in self.player.items.keys():
-            move2 = input(script.prompt_item)
-        self.player.equip(self.player.items[move2])
+        display.inventory(
+            self.player.json_inventory()
+        )
+        choice = self.player.get_item(
+            input(script.prompt_equip)
+        )
+        while not choice or not isinstance(choice, (item.Weapon, item.Armor)):
+            choice = self.player.get_item(
+                input(script.prompt_item)
+            )
+        self.player.equip(choice)
 
     def player_unequip(self) -> None:
         """Unequipping submenu"""
-        self.player.display_gears()
-        move2 = input(script.prompt_equip)
-        while move2 not in [
-                "helm", "chest", "legs", "boots", "weapon"
-        ]:
-            move2 = input(script.invalid_unequip)
-        self.player.unequip(move2)
+        display.gear(
+            self.player.json_gear()
+        )
+        choice = input(script.prompt_unequip)
+        while not self.player.get_gear(choice):
+            choice = input(script.invalid_equip)
+        self.player.unequip(choice)
 
     def player_trash(self) -> None:
         """Trashing submenu"""
-        if not self.player.items:
+        if self.player.items.is_empty():
             print(script.invalid_equip)
             return
-        move2 = input(script.prompt_trash)
-        while move2 not in self.player.items.keys():
-            move2 = input(script.invalid_item)
-        self.player.trash(self.player.items[move2])
+        item = self.player.get_item(
+            input(script.prompt_trash)
+        )
+        while not item:
+            item = self.player.get_item(
+                input(script.invalid_item)
+            )
+        self.player.trash(item)
 
     def player_move(self, move: str) -> None:
         x, y = self.player.coords

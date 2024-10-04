@@ -75,6 +75,9 @@ class Inventory:
     def __getitem__(self, name: str) -> Slot:
         return self.slots[name]
 
+    def get(self, name: str, default = None) -> item.Item:
+        return self.slots.get(name, default)
+
     def items(self):
         return self.slots.items()
 
@@ -99,6 +102,10 @@ class Inventory:
     def has(self, item: item.Item) -> bool:
         """Returns True if inventory contains item, otherwise False"""
         return item.name in self.slots and not self.slots[item.name].is_empty()
+
+    def is_empty(self) -> bool:
+        """Returns True if inventory is empty, otherwise False"""
+        return len(self.slots) == 0
 
     def is_full(self) -> bool:
         """Returns True if inventory is full, otherwise False"""
@@ -164,6 +171,15 @@ class Player:
         print(msg)
         return (status == OK)
 
+    def json_inventory(self):
+        return self.items.json()
+
+    def json_gear(self):
+        return {
+            section: slot.json()
+            for section, slot in self.gears.items()
+        }
+
     def display_inv(self):
         print("-----\nInventory\n")
         for name in self.items.keys():
@@ -175,6 +191,12 @@ class Player:
         for section in self.gears.keys():
             print(f"{section}: {self.gears[section]}")
         print("-----\n")
+
+    def get_item(self, name: str) -> item.Item | None:
+        return self.items.get(name)
+
+    def get_gear(self, section: str) -> item.Item | None:
+        return self.gears.get(section) and self.gears[section].item
 
     def check(self, item: item.Item):
         if item.name in self.items.keys():
