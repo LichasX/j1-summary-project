@@ -163,23 +163,23 @@ class Player:
         return (status == OK)
 
     #Gears
-    def equip(self, gear) -> bool:  #accepts object class
-        if gear.name not in self.items:
+    def equip(self, gear) -> bool:
+        if not self.items.has(gear):
             print("You don't have that gear!")
             return False
-        #if that section is full, say you have it on
-
-        if not self.gears[gear.section].is_empty():
+        status, msg = self.gears[gear.section].add(1)
+        if status == ERROR:
             print(f'You already have a {gear.section} equipped.')
             return False
+        status, msg = self.items.trash(gear)
+        if status == ERROR:
+            print(msg)
+            self.gears[gear.section].remove(1)
+            return False
         self.gears[gear.section].item = gear
-        self.gears[gear.section].add(1)
-        print(f'{gear.name} is equipped')
-        # Can ignore any errors from removing gear from backpack
-        self.trash(gear)
         return True
 
-    def unequip(self, section: str) -> bool:  #accepts string of equipment type
+    def unequip(self, section: str) -> bool:
         gear = self.gears[section].item
         status, msg = self.items.store(gear)
         if status == ERROR:
