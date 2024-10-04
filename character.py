@@ -50,6 +50,10 @@ class Inventory:
         """Gross weight of inventory"""
         return sum(slot.gross_weight() for slot in self.slots.values())
 
+    def has(self, object) -> bool:
+        """Returns True if inventory contains object, otherwise False"""
+        return object.name in self.slots and not self.slots[object.name].is_empty()
+
     def store(self, object) -> bool:
         """Add object to inventory.
         Returns True if successful, otherwise False.
@@ -64,7 +68,7 @@ class Inventory:
 
     def trash(self, object) -> bool:
         """Remove object from inventory"""
-        if object.name not in self.slots.keys():
+        if not self.has(object).name not in self.slots.keys():
             return False
         if not self.slots[object.name].remove(1):
             return False
@@ -88,11 +92,11 @@ class Player:
         self.items = {}
         self.mload = 10000000000000000000000  #fuck it who cares
         self.gears = {
-            'helm': None,
-            'chest': None,
-            'leg': None,
-            'boots': None,
-            'weapon': item.create_item("wooden_sword")
+            'helm': Slot(None, limit=1),
+            'chest': Slot(None, limit=1),
+            'leg': Slot(None, limit=1),
+            'boots': Slot(None, limit=1),
+            'weapon': Slot(item.create_item("wooden_sword"), limit=1)
         }
 
     def __repr__(self):
@@ -166,35 +170,33 @@ class Player:
                 del self.items[object.name]
 
     #Gears
-    def equip(self, gear):  #accepts object class
+    def equip(self, gear) -> bool:  #accepts object class
         if gear.name not in self.items:
             print("You don't have that gear!")
             return False
         #if that section is full, say you have it on
 
-        if self.gears[gear.section] is not None:
+        if not self.gears[gear.section].is_empty():
             print(f'You already have a {gear.section} equipped.')
             return False
-
-        #else, equip that gear
-        self.gears[gear.section] = gear
+        self.gears[gear.section].item = gear
+        self.gears[gear.section].add(1)
         print(f'{gear.name} is equipped')
-        self.trash(self.gears[gear.section])
+        self.trash(gear)
         return True
 
-    def unequip(self, section):  #accepts string of equipment type
-        if self.gears[section] is None:
+    def unequip(self, section: str) -> bool:  #accepts string of equipment type
+        if self.gears[section].is_empty():
             print('Nothing is equipped there.')
             return False
-
         if self.backpack_isFull():
             print(f'Backpack Full! {section} cannot be unequipped!')
             return False
-        else:
-            self.store(self.gears[section])
-            print(f'{self.gears[section].name} unequipped')
-            self.gears[section] = None
-            return True
+        gear = self.gears[section].item
+        self.store(gear)
+        print(f'{gear.name} unequipped')
+        self.gears[section].remove(1)
+        return True
 
     def combat(self, enemy: "Enemy"):
         print("\n")
