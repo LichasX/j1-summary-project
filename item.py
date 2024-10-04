@@ -68,14 +68,13 @@ class Potion:
 
 
 def create_weapon(jsondata: dict) -> Weapon:
-    return Weapon(jsondata["attack"], jsondata["critc"], jsondata["name"],
-                  jsondata["num"], jsondata["weight"])
+    return Weapon(**jsondata)
 
 def create_armor(jsondata: dict) -> Armor:
-    return Armor(jsondata["section"], jsondata["name"], jsondata["defense"], jsondata["num"], jsondata["weight"])
+    return Armor(**jsondata)
 
 def create_potion(jsondata: dict) -> Potion:
-    return Potion(jsondata["name"], jsondata["desc"], jsondata["buff"])
+    return Potion(**jsondata)
 
 def create_item(name: str) -> Weapon | Armor | Potion:
     if name in gamedata.weapons:
