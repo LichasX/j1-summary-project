@@ -180,32 +180,11 @@ class Player:
             for section, slot in self.gears.items()
         }
 
-    def display_inv(self):
-        print("-----\nInventory\n")
-        for name in self.items.keys():
-            print(name, self.items[name])
-        print("-----\n")
-
-    def display_gears(self):
-        print("-----\nGears\n")
-        for section in self.gears.keys():
-            print(f"{section}: {self.gears[section]}")
-        print("-----\n")
-
     def get_item(self, name: str) -> item.Item | None:
         return self.items.get(name)
 
     def get_gear(self, section: str) -> item.Item | None:
         return self.gears.get(section) and self.gears[section].item
-
-    def check(self, item: item.Item):
-        if item.name in self.items.keys():
-            print(f'Name: {item}')
-            print(f'Amount:{self.items[item.name].count}')
-            print(f'Description:{item.desc}')
-            return True
-        print('Item not in Backpack')
-        return False
 
     def trash(self, item: item.Item):
         status, msg = self.items.trash(item)
