@@ -2,6 +2,7 @@ import random
 import sys
 
 import character
+import gamedata
 import item
 import script
 
@@ -20,7 +21,7 @@ class Map:
     def get_coord(self, x: int, y: int) -> str:
         return self.map[y][x]
 
-    def set_coord(self, x: int, y: int, value: str) -> None:
+    def set_coord(self, x: int, y: int, value) -> None:
         self.map[y][x] = value
 
     def random_empty_coord(self, max_tries: int = 20) -> tuple[int, int]:
@@ -63,7 +64,11 @@ class Game:
             raise ValueError("No empty coords")
         x, y = coord
         self.map.set_coord(x, y, character.Boss(
-            "Overlord", 50, 3, 5, 0.5
+            name=gamedata.boss["name"],
+            health=gamedata.boss["health"],
+            attack=gamedata.boss["attack"],
+            defense=gamedata.boss["defense"],
+            speed=gamedata.boss["speed"]
         ))
         #enemies spawn
         for i in range(self.e):
@@ -74,10 +79,11 @@ class Game:
             self.map.set_coord(
                 x, y,
                 character.Enemy(
-                    "Enemy",
-                    random.randint(3, 10),
-                    random.randint(1, 2),
-                    random.randint(1, 3), 1
+                    name=gamedata.enemy["name"],
+                    health=random.randint(gamedata.enemy["health"][0], gamedata.enemy["health"][1]),
+                    attack=random.randint(gamedata.enemy["attack"][0], gamedata.enemy["attack"][1]),
+                    defense=random.randint(gamedata.enemy["defense"][0], gamedata.enemy["defense"][1]),
+                    speed=gamedata.enemy["speed"]
                 )
             )
 
