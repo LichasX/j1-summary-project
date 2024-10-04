@@ -196,6 +196,7 @@ class Game:
         if isinstance(self.player_next_encounter, character.Enemy):
             print(script.event_encounter)
             self.event_fight(self.player, self.player_next_encounter)
+            self.player_next_encounter = None
         else:
             print(script.event_nothing)
 
