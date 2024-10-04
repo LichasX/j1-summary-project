@@ -22,7 +22,7 @@ class Player:
             'chest': None,
             'leg': None,
             'boots': None,
-            'weapon': item.wooden_sword
+            'weapon': item.create_item("wooden_sword")
         }
 
     def __repr__(self):
