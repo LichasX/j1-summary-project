@@ -5,6 +5,9 @@ import character
 import item
 import script
 
+def random_coord(max_x: int, max_y: int) -> tuple[int, int]:
+    return random.randint(0, max_x), random.randint(0, max_y)
+
 
 class Map:
 
@@ -45,7 +48,7 @@ class Game:
         self.map.set_coord(0, 0, self.player)
         #boss spawn
         while True:
-            x, y = random.randint(0, self.n - 1), random.randint(0, self.n - 1)
+            x, y = random_coord(self.n - 1, self.n - 1)
             if self.map.get_coord(x, y) == ".":
                 self.map.set_coord(
                     x,
@@ -57,8 +60,7 @@ class Game:
         #enemies spawn
         for i in range(self.e):
             while True:
-                x, y = random.randint(0, self.n - 1), random.randint(
-                    0, self.n - 1)
+                x, y = random_coord(self.n - 1, self.n - 1)
                 if self.map.get_coord(x, y) == ".":
                     self.map.set_coord(
                         x, y,
