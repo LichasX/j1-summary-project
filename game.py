@@ -23,6 +23,17 @@ class Map:
     def set_coord(self, x: int, y: int, value: str) -> None:
         self.map[y][x] = value
 
+    def random_empty_coord(self, max_tries: int = 20) -> tuple[int, int]:
+        """Return any random coord that is empty."""
+        x, y = random_coord(self.width - 1, self.height - 1)
+        tries = 1
+        while self.get_coord(x, y) != '.' and tries < max_tries:
+            x, y = random_coord(self.width - 1, self.height - 1)
+            tries += 1
+        if tries >= max_tries:
+            return None
+        return x, y
+
 
 class Game:
 
