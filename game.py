@@ -6,12 +6,27 @@ import item
 import script
 
 
+class Map:
+
+    def __init__(self, width: int, height: int):
+        self.width = width
+        self.height = height
+        self.map = [['.' for i in range(self.width)]
+                    for i in range(self.height)]
+
+    def get_coord(self, x: int, y: int) -> str:
+        return self.map[y][x]
+
+    def set_coord(self, x: int, y: int, value: str) -> None:
+        self.map[y][x] = value
+
+
 class Game:
 
     def __init__(self, name):
         self.n = 5  #length of sides of grid
         self.e = 12  #num of enemies
-        self.map = [['.' for i in range(self.n)] for i in range(self.n)]
+        self.map = Map(self.n, self.n)
         self.player = character.Player(name)
 
     def printmap(self):
@@ -19,7 +34,7 @@ class Game:
         for i in range(self.n):
             output = ""
             for j in range(self.n):
-                output += str(self.map[i][j]) + " "
+                output += str(self.map.get_coord(i, j)) + " "
             print(output)
         print(f"Current Event:{self.player.event_queue}",
               type(self.player.event_queue))
@@ -27,27 +42,32 @@ class Game:
 
     def random_map(self):  #randomise events in map
         #player spawn
-        self.map[0][0] = self.player
+        self.map.set_coord(0, 0, self.player)
         #boss spawn
         while True:
-            coords = (random.randint(0, self.n - 1),
-                      random.randint(0, self.n - 1))
-            if self.map[coords[0]][coords[1]] == ".":
-                self.map[coords[0]][coords[1]] = character.Boss(
-                    ["Overlord", 50, 3, 5, 0.5])  #change values as needed
+            x, y = random.randint(0, self.n - 1), random.randint(0, self.n - 1)
+            if self.map.get_coord(x, y) == ".":
+                self.map.set_coord(
+                    x,
+                    y,
+                    character.Boss(["Overlord", 50, 3, 5,
+                                    0.5]  #change values as needed
+                                   ))
                 break
         #enemies spawn
         for i in range(self.e):
             while True:
-                coords = (random.randint(0, self.n - 1),
-                          random.randint(0, self.n - 1))
-                if self.map[coords[0]][coords[1]] == ".":
-                    self.map[coords[0]][coords[1]] = character.Enemy([
-                        "Enemy",
-                        random.randint(3, 10),
-                        random.randint(1, 2),
-                        random.randint(1, 3), 1
-                    ])
+                x, y = random.randint(0, self.n - 1), random.randint(
+                    0, self.n - 1)
+                if self.map.get_coord(x, y) == ".":
+                    self.map.set_coord(
+                        x, y,
+                        character.Enemy([
+                            "Enemy",
+                            random.randint(3, 10),
+                            random.randint(1, 2),
+                            random.randint(1, 3), 1
+                        ]))
                     break
 
     def help_cmds(self):
@@ -55,6 +75,7 @@ class Game:
 
     def player_input(self):
         while True:
+            x, y = self.player.coords
             move = input(script.prompt_move)
             if move == "help":
                 print(self.help_cmds())
@@ -88,40 +109,33 @@ class Game:
                     self.player.trash(self.player.items[move2])
                 else:
                     print(script.invalid_trash)
-            elif move == 'w' and self.player.coords[0] > 0:
-                self.player.event_queue = self.map[self.player.coords[0] -
-                                                   1][self.player.coords[1]]
+            elif move == 'w' and x > 0:
+                self.player.event_queue = self.map.get_coord(x - 1, y)
                 self.player.last_move = self.player.coords
-                self.player.coords = (self.player.coords[0] - 1,
-                                      self.player.coords[1])
+                self.player.coords = (x - 1, y)
                 break
-            elif move == 'a' and self.player.coords[1] > 0:
-                self.player.event_queue = self.map[self.player.coords[0]][
-                    self.player.coords[1] - 1]
+            elif move == 'a' and y > 0:
+                self.player.event_queue = self.map.get_coord(x, y - 1)
                 self.player.last_move = self.player.coords
-                self.player.coords = (self.player.coords[0],
-                                      self.player.coords[1] - 1)
+                self.player.coords = (x, y - 1)
                 break
-            elif move == 's' and self.player.coords[0] < self.n - 1:
-                self.player.event_queue = self.map[self.player.coords[0] +
-                                                   1][self.player.coords[1]]
+            elif move == 's' and x < self.n - 1:
+                self.player.event_queue = self.map.get_coord(x + 1, y)
                 self.player.last_move = self.player.coords
-                self.player.coords = (self.player.coords[0] + 1,
-                                      self.player.coords[1])
+                self.player.coords = (x + 1, y)
                 break
-            elif move == 'd' and self.player.coords[1] < self.n - 1:
-                self.player.event_queue = self.map[self.player.coords[0]][
-                    self.player.coords[1] + 1]
+            elif move == 'd' and y < self.n - 1:
+                self.player.event_queue = self.map.get_coord(x, y + 1)
                 self.player.last_move = self.player.coords
-                self.player.coords = (self.player.coords[0],
-                                      self.player.coords[1] + 1)
+                self.player.coords = (x, y + 1)
                 break
             else:
                 print(script.invalid_move)
 
     def update_position(self):
-        self.map[self.player.coords[0]][self.player.coords[1]] = self.player
-        self.map[self.player.last_move[0]][self.player.last_move[1]] = "X"
+        x, y = self.player.coords
+        self.map.set_coord(x, y, self.player)
+        self.map.set_coord(self.player.last_move[0], self.player.last_move[1], "X")
 
     def check_event(self):
         if isinstance(self.player.event_queue, character.Enemy):
