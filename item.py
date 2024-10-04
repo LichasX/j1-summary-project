@@ -10,6 +10,9 @@ class Item:
         self.desc = desc
         self.weight = weight
 
+    def __str__(self) -> str:
+        return self.name
+
 
 class Armor(Item):
 

@@ -61,6 +61,18 @@ class Inventory:
         self.slots = {}
         self.weight_limit = weight_limit
 
+    def __getitem__(self, name: str) -> Slot:
+        return self.slots[name]
+
+    def items(self):
+        return self.slots.items()
+
+    def keys(self):
+        return self.slots.keys()
+
+    def values(self):
+        return self.slots.values()
+
     def gross_weight(self) -> int:
         """Gross weight of inventory"""
         return sum(slot.gross_weight() for slot in self.slots.values())
@@ -139,32 +151,32 @@ class Player:
 
     def display_inv(self):
         print("-----\nInventory\n")
-        for i in self.items.keys():
-            print(i, self.items[i].num)
+        for name in self.items.keys():
+            print(name, self.items[name])
         print("-----\n")
 
     def display_gears(self):
         print("-----\nGears\n")
-        for i in self.gears.keys():
-            print(f"{i}: {self.gears[i]}")
+        for section in self.gears.keys():
+            print(f"{section}: {self.gears[section]}")
         print("-----\n")
 
-    def check(self, object):
-        if item in self.items.keys():
+    def check(self, item: item.Item):
+        if item.name in self.items.keys():
             print(f'Name: {item}')
-            print(f'Amount:{self.items[item].num}')
-            print(f'Description:{self.items[item].desc}')
+            print(f'Amount:{self.items[item.name].count}')
+            print(f'Description:{item.desc}')
             return True
         print('Item not in Backpack')
         return False
 
-    def trash(self, object):
-        status, msg = self.items.trash(object)
+    def trash(self, item: item.Item):
+        status, msg = self.items.trash(item)
         print(msg)
         return (status == OK)
 
     #Gears
-    def equip(self, gear) -> bool:
+    def equip(self, gear: item.Weapon | item.Armor) -> bool:
         if not self.items.has(gear):
             print("You don't have that gear!")
             return False
