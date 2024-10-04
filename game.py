@@ -3,6 +3,7 @@ import sys
 
 import character
 import item
+import script
 
 
 class Game:
@@ -50,11 +51,11 @@ class Game:
                     break
 
     def help_cmds(self):
-        return "-----\nMovement\n\n'w'\n'a'\n's'\n'd'\n-----\nActions\n\n'trash' (remove item from inventory)\n'equip'\n'unequip'\n-----\nInfo\n\n'inventory'\n'gears'"
+        return script.help
 
     def player_input(self):
         while True:
-            move = input("Enter move or 'help' to view all commands: ")
+            move = input(script.prompt_move)
             if move == "help":
                 print(self.help_cmds())
             elif move == "inventory":
@@ -64,31 +65,29 @@ class Game:
             elif move == "equip":
                 if len(self.player.items.keys()) > 0:
                     self.player.display_inv()
-                    move2 = input("Enter what to equip: ")
+                    move2 = input(script.prompt_equip)
                     while move2 not in self.player.items.keys():
-                        move2 = input("Enter valid item: ")
+                        move2 = input(script.prompt_item)
                     self.player.equip(self.player.items[move2])
                 else:
-                    print("got nothing to equip lah")
+                    print(script.invalid_equip)
             elif move == "unequip":
                 self.player.display_gears()
-                move2 = input(
-                    "Enter what section to unequip (e.g. helm, chest etc AND NOT THE NAME OF THE ITEM): "
-                )
+                move2 = input(script.prompt_equip)
                 while move2 not in [
                         "helm", "chest", "legs", "boots", "weapon"
                 ]:
-                    move2 = input("Enter valid section: ")
+                    move2 = input(script.invalid_unequip)
                 self.player.unequip(move2)
             elif move == "trash":
                 if len(self.player.items.keys()) > 0:
                     self.player.display_inv()
-                    move2 = input("Enter what to trash: ")
+                    move2 = input(script.prompt_trash)
                     while move2 not in self.player.items.keys():
-                        move2 = input("Enter valid item: ")
+                        move2 = input(script.invalid_item)
                     self.player.trash(self.player.items[move2])
                 else:
-                    print("got nothing to trash lah")
+                    print(script.invalid_trash)
             elif move == 'w' and self.player.coords[0] > 0:
                 self.player.event_queue = self.map[self.player.coords[0] -
                                                    1][self.player.coords[1]]
@@ -118,7 +117,7 @@ class Game:
                                       self.player.coords[1] + 1)
                 break
             else:
-                print("Invalid move")
+                print(script.invalid_move)
 
     def update_position(self):
         self.map[self.player.coords[0]][self.player.coords[1]] = self.player
@@ -126,10 +125,10 @@ class Game:
 
     def check_event(self):
         if isinstance(self.player.event_queue, character.Enemy):
-            print("You have encountered an enemy.")
+            print(script.event_encounter)
             self.event_fight(self.player, self.player.event_queue)
         else:
-            print("nothing")
+            print(script.event_nothing)
 
     def event_fight(self, player, enemy):
         result = False
@@ -149,14 +148,14 @@ class Game:
         if result == -1:  #defeat against normal enemy
             sys.exit()
         elif result == -666:  #defeat against boss
-            print("The final boss has killed you...")
+            print(script.boss_won)
             sys.exit()
         elif result == -888:  #win against boss
-            print("You have defeated the final boss")
+            print(script.boss_defeated)
             sys.exit()
         elif result == True:  #win against normal enemy
             print("\n")
             self.player.health = self.player.max_health
             reward = random.choice(item.loot_table)
-            print(f"You have obtained {reward}")
+            print(script.get_reward.replace("$$reward$$", reward))
             self.player.store(reward)
