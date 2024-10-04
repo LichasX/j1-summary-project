@@ -21,10 +21,17 @@ class Slot:
         """Adds count to slot.
         Returns True if successful, otherwise False.
         """
-        if self.limit is not None and self.count + count > self.limit:
+        if not self.can_add(count):
             return False
         self.count += count
         return True
+
+    def can_add(self, count: int = 1) -> bool:
+        """Returns True if there is space in the slot for count items"""
+        return (
+            self.limit is not None
+            and self.count + count > self.limit
+        )
 
     def remove(self, count: int = 1) -> bool:
         """Removes count from slot.
@@ -50,15 +57,27 @@ class Inventory:
         """Gross weight of inventory"""
         return sum(slot.gross_weight() for slot in self.slots.values())
 
+    def can_store(self, item, count: int = 1) -> bool:
+        """Returns True if inventory can store item with count"""
+        if self.gross_weight() + item.weight * count > self.weight_limit:
+            return False
+        if item.name not in self.slots:
+            return True
+        return  self.slots[item.name].can_add(count)
+
     def has(self, object) -> bool:
         """Returns True if inventory contains object, otherwise False"""
         return object.name in self.slots and not self.slots[object.name].is_empty()
+
+    def is_full(self) -> bool:
+        """Returns True if inventory is full, otherwise False"""
+        return self.gross_weight() >= self.weight_limit
 
     def store(self, object) -> bool:
         """Add object to inventory.
         Returns True if successful, otherwise False.
         """
-        if object.weight + self.gross_weight > self.weight_limit:
+        if not self.can_store(object):
             return False
         if object.name not in self.slots.keys():
             self.slots[object.name] = Slot(object)
@@ -68,7 +87,7 @@ class Inventory:
 
     def trash(self, object) -> bool:
         """Remove object from inventory"""
-        if not self.has(object).name not in self.slots.keys():
+        if not self.has(object):
             return False
         if not self.slots[object.name].remove(1):
             return False
@@ -90,7 +109,8 @@ class Player:
         self.last_move = (0, 0)  #tracks the player's position last turn
         self.event_queue = None  #stores the event that the player is moving to (e.g. enemy fight)
         self.items = {}
-        self.mload = 10000000000000000000000  #fuck it who cares
+        max_load = 10000000000000000000000
+        self.items = Inventory(weight_limit=max_load)
         self.gears = {
             'helm': Slot(None, limit=1),
             'chest': Slot(None, limit=1),
