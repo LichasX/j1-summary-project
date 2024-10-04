@@ -17,7 +17,8 @@ def main():
     board.random_map()
     board.printmap()
     while True:
-        board.player_input()
+        move = board.prompt_player()
+        board.player_action(move)
         board.update_position()
         board.printmap()
         board.check_event()

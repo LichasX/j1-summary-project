@@ -64,6 +64,7 @@ class Game:
         self.e = 12  #num of enemies
         self.map = Map(self.n, self.n)
         self.player = character.Player(name)
+        self.moveset = ["help", "gears", "equip", "unequip", "inventory", "trash"]
 
     def printmap(self):
         print("\n-----\nMap\n\n")
@@ -96,64 +97,63 @@ class Game:
     def help_cmds(self):
         return script.help
 
-    def player_input(self):
-        while True:
-            x, y = self.player.coords
+    def prompt_player(self) -> str:
+        move = input(script.prompt_move)
+        if move not in self.moveset:
+            print(script.invalid_move)
             move = input(script.prompt_move)
-            if move == "help":
-                print(self.help_cmds())
-            elif move == "inventory":
+        return move
+
+    def player_action(self, move: str):
+        x, y = self.player.coords
+        if move == "help":
+            print(self.help_cmds())
+        elif move == "inventory":
+            self.player.display_inv()
+        elif move == "gears":
+            self.player.display_gears()
+        elif move == "equip":
+            if len(self.player.items.keys()) > 0:
                 self.player.display_inv()
-            elif move == "gears":
-                self.player.display_gears()
-            elif move == "equip":
-                if len(self.player.items.keys()) > 0:
-                    self.player.display_inv()
-                    move2 = input(script.prompt_equip)
-                    while move2 not in self.player.items.keys():
-                        move2 = input(script.prompt_item)
-                    self.player.equip(self.player.items[move2])
-                else:
-                    print(script.invalid_equip)
-            elif move == "unequip":
-                self.player.display_gears()
                 move2 = input(script.prompt_equip)
-                while move2 not in [
-                        "helm", "chest", "legs", "boots", "weapon"
-                ]:
-                    move2 = input(script.invalid_unequip)
-                self.player.unequip(move2)
-            elif move == "trash":
-                if len(self.player.items.keys()) > 0:
-                    self.player.display_inv()
-                    move2 = input(script.prompt_trash)
-                    while move2 not in self.player.items.keys():
-                        move2 = input(script.invalid_item)
-                    self.player.trash(self.player.items[move2])
-                else:
-                    print(script.invalid_trash)
-            elif move == 'w' and x > 0:
-                self.player.event_queue = self.map.get_coord(x - 1, y)
-                self.player.last_move = self.player.coords
-                self.player.coords = (x - 1, y)
-                break
-            elif move == 'a' and y > 0:
-                self.player.event_queue = self.map.get_coord(x, y - 1)
-                self.player.last_move = self.player.coords
-                self.player.coords = (x, y - 1)
-                break
-            elif move == 's' and x < self.n - 1:
-                self.player.event_queue = self.map.get_coord(x + 1, y)
-                self.player.last_move = self.player.coords
-                self.player.coords = (x + 1, y)
-                break
-            elif move == 'd' and y < self.n - 1:
-                self.player.event_queue = self.map.get_coord(x, y + 1)
-                self.player.last_move = self.player.coords
-                self.player.coords = (x, y + 1)
-                break
+                while move2 not in self.player.items.keys():
+                    move2 = input(script.prompt_item)
+                self.player.equip(self.player.items[move2])
             else:
-                print(script.invalid_move)
+                print(script.invalid_equip)
+        elif move == "unequip":
+            self.player.display_gears()
+            move2 = input(script.prompt_equip)
+            while move2 not in [
+                    "helm", "chest", "legs", "boots", "weapon"
+            ]:
+                move2 = input(script.invalid_unequip)
+            self.player.unequip(move2)
+        elif move == "trash":
+            if len(self.player.items.keys()) > 0:
+                self.player.display_inv()
+                move2 = input(script.prompt_trash)
+                while move2 not in self.player.items.keys():
+                    move2 = input(script.invalid_item)
+                self.player.trash(self.player.items[move2])
+            else:
+                print(script.invalid_trash)
+        elif move == 'w' and x > 0:
+            self.player.event_queue = self.map.get_coord(x - 1, y)
+            self.player.last_move = self.player.coords
+            self.player.coords = (x - 1, y)
+        elif move == 'a' and y > 0:
+            self.player.event_queue = self.map.get_coord(x, y - 1)
+            self.player.last_move = self.player.coords
+            self.player.coords = (x, y - 1)
+        elif move == 's' and x < self.n - 1:
+            self.player.event_queue = self.map.get_coord(x + 1, y)
+            self.player.last_move = self.player.coords
+            self.player.coords = (x + 1, y)
+        elif move == 'd' and y < self.n - 1:
+            self.player.event_queue = self.map.get_coord(x, y + 1)
+            self.player.last_move = self.player.coords
+            self.player.coords = (x, y + 1)
 
     def update_position(self):
         x, y = self.player.coords
