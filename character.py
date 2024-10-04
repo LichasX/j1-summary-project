@@ -158,12 +158,19 @@ class Player:
 
 class Enemy:
 
-    def __init__(self, data: list):  #name, health, defense, attack, speed
-        self.name = data[0]
-        self.health = data[1]
-        self.defense = data[2]
-        self.attack = data[3]
-        self.speed = data[4]
+    def __init__(
+            self,
+            name: str,
+            health: int,
+            defense: int, 
+            attack: int,
+            speed: int
+    ):
+        self.name = name
+        self.health = health
+        self.defense = defense
+        self.attack = attack
+        self.speed = speed
 
     def __repr__(self):
         return "E"
@@ -193,9 +200,6 @@ class Enemy:
 
 
 class Boss(Enemy):
-
-    def __init__(self, data):
-        super().__init__(data)
 
     def __repr__(self):
         return "B"

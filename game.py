@@ -63,7 +63,7 @@ class Game:
             raise ValueError("No empty coords")
         x, y = coord
         self.map.set_coord(x, y, character.Boss(
-            ["Overlord", 50, 3, 5, 0.5]  #change values as needed
+            "Overlord", 50, 3, 5, 0.5
         ))
         #enemies spawn
         for i in range(self.e):
@@ -73,12 +73,12 @@ class Game:
             x, y = coord
             self.map.set_coord(
                 x, y,
-                character.Enemy([
+                character.Enemy(
                     "Enemy",
                     random.randint(3, 10),
                     random.randint(1, 2),
                     random.randint(1, 3), 1
-                ])
+                )
             )
 
     def help_cmds(self):
