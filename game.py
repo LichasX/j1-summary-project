@@ -68,6 +68,12 @@ class Map:
             return None
         return x, y
 
+    def json(self) -> list[list[str]]:
+        return [
+            [str(self.get_coord(x, y)) for x in range(self.width)]
+            for y in range(self.height)
+        ]
+
 
 class Game:
 
@@ -84,6 +90,14 @@ class Game:
             "help", "gears", "equip", "unequip", "inventory", "trash"
         ]
         self.directions = ["w", "a", "s", "d"]
+
+    def json(self) -> dict:
+        return {
+            "map": self.map.json(),
+            "player": self.player.json(),
+            "boss": self.boss.json() if self.boss else None,
+            "next_event": str(self.player_next_encounter),
+        }
 
     def printmap(self):
         print("\n-----\nMap\n\n")
