@@ -212,24 +212,25 @@ class Game:
             print(script.event_nothing)
 
     def event_fight(self, player: character.Player, enemy: character.Enemy):
+        """Handle combat between player and enemy, until one dies."""
         if player.speed >= enemy.speed:
             attacker, defender = player, enemy
         else:
             attacker, defender = enemy, player
-        result = None
-        while not result:
-            combat.single_attack(attacker, defender)
+        outcome = None
+        while not outcome:
+            outcome = combat.single_attack(attacker, defender)
             attacker, defender = defender, attacker
-        if result == -1:  #defeat against normal enemy
+            display.attack(outcome.json())
+
+        if player.is_dead():
+            if isinstance(enemy, character.Boss):
+                print(script.boss_won)
             sys.exit()
-        elif result == -666:  #defeat against boss
-            print(script.boss_won)
-            sys.exit()
-        elif result == -888:  #win against boss
-            print(script.boss_defeated)
-            sys.exit()
-        elif result == True:  #win against normal enemy
-            print("\n")
+        else:
+            if isinstance(enemy, character.Boss):
+                print(script.boss_defeated)
+                sys.exit()
             self.player.health = self.player.max_health
             reward = random.choice(item.loot_table)
             print(script.get_reward.replace("$$reward$$", reward))
