@@ -137,6 +137,34 @@ class Inventory:
         return [slot.json() for slot in self.slots.values()]
 
 
+class Combatant:
+    """Base class for all characters that can engage in combat."""
+    attack: int
+    defense: int
+    speed: int
+    def __init__(self, name: str, attack: int, defense: int, speed: int):
+        self.name = name
+        self.attack = attack
+        self.defense = defense
+        self.speed = speed
+
+    def get_crit_chance(self) -> int:
+        """Combatant's chance to crit; default 0."""
+        return 0
+
+    def get_weapon_attack(self) -> int:
+        """Get attack of equipped weapon; 0 if no weapon"""
+        return 0
+
+    def take_damage(self, damage: int) -> None:
+        """Subtracts damage from health.
+        Health cannot go below 0.
+        """
+        self.health -= damage
+        if self.health < 0:
+            self.health = 0
+
+
 class Player:
 
     def __init__(self, name):
