@@ -211,19 +211,15 @@ class Game:
         else:
             print(script.event_nothing)
 
-    def event_fight(self, player, enemy):
-        result = False
-        turn_order = [player, enemy]
+    def event_fight(self, player: character.Player, enemy: character.Enemy):
         if player.speed >= enemy.speed:
-            i = 0
+            attacker, defender = player, enemy
         else:
-            i = 1
+            attacker, defender = enemy, player
+        result = None
         while not result:
-            combat.single_attack(turn_order[i], turn_order[i - 1])
-            if i == 1:
-                i = 0
-            else:
-                i += 1
+            combat.single_attack(attacker, defender)
+            attacker, defender = defender, attacker
         if result == -1:  #defeat against normal enemy
             sys.exit()
         elif result == -666:  #defeat against boss
