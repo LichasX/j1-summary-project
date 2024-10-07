@@ -19,7 +19,8 @@ class Item:
 
 class Armor(Item):
 
-    def __init__(self, section, name: str, desc: str, defense: int, weight: int):
+    def __init__(self, section, name: str, desc: str, defense: int,
+                 weight: int):
         super().__init__(name, desc, weight)
         self.section = section  #helm, chest, leg, boots
         self.defense = defense
@@ -39,7 +40,8 @@ class Armor(Item):
 
 class Weapon(Item):
 
-    def __init__(self, attack: int, critc: int, name: str, desc: str, weight: int):
+    def __init__(self, attack: int, critc: int, name: str, desc: str,
+                 weight: int):
         super().__init__(name, desc, weight)
         self.section = 'weapon'
         self.attack = attack
@@ -81,11 +83,14 @@ class Potion(Item):
 def create_weapon(jsondata: dict) -> Weapon:
     return Weapon(**jsondata)
 
+
 def create_armor(jsondata: dict) -> Armor:
     return Armor(**jsondata)
 
+
 def create_potion(jsondata: dict) -> Potion:
     return Potion(**jsondata)
+
 
 def create_item(name: str) -> Weapon | Armor | Potion:
     if name in gamedata.weapons:

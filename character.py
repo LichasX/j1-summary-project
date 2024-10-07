@@ -190,7 +190,8 @@ class Combatant:
 
 class Player(Combatant):
 
-    def __init__(self, name: str, attack: int, defense: int, health: int, speed: int, max_load: int):
+    def __init__(self, name: str, attack: int, defense: int, health: int,
+                 speed: int, max_load: int):
         super().__init__(name, attack=1, defense=0, health=10, speed=1)
         self.max_health = self.health
         max_load = max_load

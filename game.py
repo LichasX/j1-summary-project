@@ -8,8 +8,10 @@ import gamedata
 import item
 import script
 
+
 def random_coord(max_x: int, max_y: int) -> tuple[int, int]:
     return random.randint(0, max_x), random.randint(0, max_y)
+
 
 def create_player() -> character.Player:
     return character.Player(
@@ -21,26 +23,24 @@ def create_player() -> character.Player:
         max_load=gamedata.player["max_load"],
     )
 
+
 def create_boss() -> character.Boss:
-    return character.Boss(
-        name=gamedata.boss["name"],
-        health=gamedata.boss["health"],
-        attack=gamedata.boss["attack"],
-        defense=gamedata.boss["defense"],
-        speed=gamedata.boss["speed"]
-    )
+    return character.Boss(name=gamedata.boss["name"],
+                          health=gamedata.boss["health"],
+                          attack=gamedata.boss["attack"],
+                          defense=gamedata.boss["defense"],
+                          speed=gamedata.boss["speed"])
+
 
 def create_enemy() -> character.Enemy:
     min_health, max_health = gamedata.enemy["health"]
     min_attack, max_attack = gamedata.enemy["attack"]
     min_defense, max_defense = gamedata.enemy["defense"]
-    return character.Enemy(
-        name=gamedata.enemy["name"],
-        health=random.randint(min_health, max_health),
-        attack=random.randint(min_attack, max_attack),
-        defense=random.randint(min_defense, max_defense),
-        speed=gamedata.enemy["speed"]
-    )
+    return character.Enemy(name=gamedata.enemy["name"],
+                           health=random.randint(min_health, max_health),
+                           attack=random.randint(min_attack, max_attack),
+                           defense=random.randint(min_defense, max_defense),
+                           speed=gamedata.enemy["speed"])
 
 
 class Map:
@@ -80,7 +80,9 @@ class Game:
         self.player_coord = (0, 0)
         self.player_last_move = None
         self.player_next_encounter = None
-        self.moveset = ["help", "gears", "equip", "unequip", "inventory", "trash"]
+        self.moveset = [
+            "help", "gears", "equip", "unequip", "inventory", "trash"
+        ]
         self.directions = ["w", "a", "s", "d"]
 
     def printmap(self):
@@ -129,13 +131,9 @@ class Game:
         if move == "help":
             print(self.help_cmds())
         elif move == "inventory":
-            display.inventory(
-                self.player.json_inventory()
-            )
+            display.inventory(self.player.json_inventory())
         elif move == "gears":
-            display.gear(
-                self.player.json_gear()
-            )
+            display.gear(self.player.json_gear())
         elif move == "equip":
             self.player_equip()
         elif move == "unequip":
@@ -150,23 +148,15 @@ class Game:
         if self.player.items.is_empty():
             print(script.invalid_equip)
             return
-        display.inventory(
-            self.player.json_inventory()
-        )
-        choice = self.player.get_item(
-            input(script.prompt_equip)
-        )
+        display.inventory(self.player.json_inventory())
+        choice = self.player.get_item(input(script.prompt_equip))
         while not choice or not isinstance(choice, (item.Weapon, item.Armor)):
-            choice = self.player.get_item(
-                input(script.prompt_item)
-            )
+            choice = self.player.get_item(input(script.prompt_item))
         self.player.equip(choice)
 
     def player_unequip(self) -> None:
         """Unequipping submenu"""
-        display.gear(
-            self.player.json_gear()
-        )
+        display.gear(self.player.json_gear())
         choice = input(script.prompt_unequip)
         while not self.player.get_gear(choice):
             choice = input(script.invalid_equip)
@@ -177,13 +167,9 @@ class Game:
         if self.player.items.is_empty():
             print(script.invalid_equip)
             return
-        item = self.player.get_item(
-            input(script.prompt_trash)
-        )
+        item = self.player.get_item(input(script.prompt_trash))
         while not item:
-            item = self.player.get_item(
-                input(script.invalid_item)
-            )
+            item = self.player.get_item(input(script.invalid_item))
         self.player.trash(item)
 
     def player_move(self, move: str) -> None:
