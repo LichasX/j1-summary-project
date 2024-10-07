@@ -204,7 +204,7 @@ class Player(Combatant):
             'weapon': Slot(item.create_item("wooden_sword"), limit=1)
         }
 
-    def __repr__(self):
+    def __str__(self) -> str:
         return "P"
 
     def full_heal(self) -> None:
@@ -270,11 +270,11 @@ class Player(Combatant):
 
 class Enemy(Combatant):
 
-    def __repr__(self):
+    def __str__(self) -> str:
         return "E"
 
 
 class Boss(Enemy):
 
-    def __repr__(self):
+    def __str__(self) -> str:
         return "B"
