@@ -1,6 +1,8 @@
+import sys
 import time
 
 import game
+import script
 
 
 def main():
@@ -16,11 +18,16 @@ def main():
     board = game.Game("Jian Lin")
     board.random_map()
     board.printmap()
-    while True:
+    while not board.is_gameover():
         move = board.prompt_player()
         board.player_action(move)
         board.printmap()
         board.check_event()
+    if board.player.is_dead():
+        print(script.boss_won)
+    else:
+        print(script.boss_defeated)
+    sys.exit()
 
 
 if __name__ == "__main__":

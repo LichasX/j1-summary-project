@@ -75,6 +75,7 @@ class Game:
         self.n = 5  #length of sides of grid
         self.e = 12  #num of enemies
         self.map = Map(self.n, self.n)
+        self.boss = None
         self.player = create_player()
         self.player_coord = (0, 0)
         self.player_last_move = None
@@ -104,7 +105,8 @@ class Game:
         if not coord:
             raise ValueError("No empty coords")
         x, y = coord
-        self.map.set_coord(x, y, create_boss())
+        self.boss = create_boss()
+        self.map.set_coord(x, y, self.boss)
         #enemies spawn
         for i in range(self.e):
             coord = self.map.random_empty_coord()
@@ -223,15 +225,13 @@ class Game:
             attacker, defender = defender, attacker
             display.attack(outcome.json())
 
-        if player.is_dead():
-            if isinstance(enemy, character.Boss):
-                print(script.boss_won)
-            sys.exit()
-        else:
-            if isinstance(enemy, character.Boss):
-                print(script.boss_defeated)
-                sys.exit()
+        if not player.is_dead():
             self.player.health = self.player.max_health
             reward = random.choice(item.loot_table)
             print(script.get_reward.replace("$$reward$$", reward))
             self.player.store(item.create_item(reward))
+
+    def is_gameover(self) -> bool:
+        if self.boss is None:
+            return False
+        return self.player.is_dead() or self.boss.is_dead()
