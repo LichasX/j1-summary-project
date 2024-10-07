@@ -207,6 +207,10 @@ class Player(Combatant):
     def __repr__(self):
         return "P"
 
+    def full_heal(self) -> None:
+        """Fully heal player"""
+        self.health = self.max_health
+
     def backpack_isFull(self):
         return self.items.is_full()
 
