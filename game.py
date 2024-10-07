@@ -212,10 +212,13 @@ class Game:
             display.attack(outcome.json())
 
         if not player.is_dead():
-            self.player.health = self.player.max_health
-            reward = random.choice(item.loot_table)
-            print(script.get_reward.replace("$$reward$$", reward))
-            self.player.store(item.create_item(reward))
+            self.event_reward(player)
+
+    def event_reward(self, player: character.Player) -> None:
+        player.full_heal()
+        reward = random.choice(item.loot_table)
+        print(script.get_reward.replace("$$reward$$", reward))
+        self.player.store(item.create_item(reward))
 
     def is_gameover(self) -> bool:
         if self.boss is None:
