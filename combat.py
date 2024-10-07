@@ -10,16 +10,19 @@ class AttackOutcome:
         attacker: character.Combatant,
         defender: character.Combatant,
         damage: int,
+        defender_dead: bool = False,
     ):
         self.attacker = attacker
         self.defender = defender
         self.damage = damage
+        self.defender_dead = defender_dead
 
     def json(self) -> dict:
         return {
             "attacker": self.attacker.json(),
             "defender": self.defender.json(),
-            "damage": self.damage
+            "damage": self.damage,
+            "defender_dead": self.defender_dead,
         }
 
 
