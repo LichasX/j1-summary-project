@@ -4,7 +4,8 @@ import time
 import character
 
 
-def player_combat(player: character.Player, enemy: character.Enemy) -> bool | int:
+def player_combat(player: character.Player,
+                  enemy: character.Enemy) -> bool | int:
     print("\n")
     time.sleep(0.5)
     crit = 1  #if there is no crit does not change
@@ -33,27 +34,30 @@ def player_combat(player: character.Player, enemy: character.Enemy) -> bool | in
     else:
         return False
 
-def enemy_combat(enemy: character.Enemy, player: character.Player) -> bool | int:
+
+def enemy_combat(enemy: character.Enemy,
+                 player: character.Player) -> bool | int:
     print("\n")
     time.sleep(0.5)
     damage = (enemy.attack - player.defense)  #enemy doesn't crit
-    
+
     if damage < 0:
         damage = 1
-    
+
     player.health -= damage  #lose health
-    
+
     print(f"You received {damage} damage from the {enemy.name}."
           )  #print damage to player
-    
+
     print(f"{player.name} current health:{player.health}")  #print hp left
-    
+
     if player.health <= 0:
         player.health = 0
         print("You fainted. Skill Issue.")
         return -1
     else:
         return False
+
 
 def boss_combat(boss: character.Boss, player: character.Player) -> bool | int:
     print("\n")
@@ -77,14 +81,28 @@ def boss_combat(boss: character.Boss, player: character.Player) -> bool | int:
     else:
         return False
 
-def combat(attacker: character.Combatant, defender: character.Combatant):
-    crit = 1  #if there is no crit does not change
-    if random.randint(1, 100) <= attacker.get_crit_chance():
-        crit = 2
-    damage = (attacker.get_weapon_attack() + attacker.attack -           defender.defense) * crit
+
+def is_crit(critc: int, sides: int = 100) -> bool:
+    """Simulates a dice roll to determine if the attack will crit."""
+    assert sides > 0, "sides must be greater than 0"
+    x = random.randint(1, sides)
+    return (x < critc)
+
+
+def calculate_damage(attacker: character.Combatant,
+                     defender: character.Combatant) -> int:
+    multiplier = 1
+    if is_crit(attacker.get_crit_chance()):
+        multiplier = 2
+    attacker_attack = attacker.get_weapon_attack() + attacker.attack
+    damage = (attacker_attack - defender.defense) * multiplier
     if damage <= 0:
         damage = 1
+    return damage
 
+
+def combat(attacker: character.Combatant, defender: character.Combatant):
+    damage = calculate_damage(attacker, defender)
     defender.take_damage(damage)
 
     print(f"{attacker} dealt {damage} damage to {defender}.")
