@@ -1,3 +1,4 @@
+import random
 import time
 
 import character
@@ -76,27 +77,25 @@ def boss_combat(boss: character.Boss, player: character.Player) -> bool | int:
     else:
         return False
 
-def combat(attacker, defender):
+def combat(attacker: character.Combatant, defender: character.Combatant):
     crit = 1  #if there is no crit does not change
-    if isinstance(attacker, character.Player) and attacker.gears["weapon"].crit():
+    if random.randint(1, 100) <= attacker.get_crit_chance():
         crit = 2
-    damage = (attacker.gears['weapon'].attack + attacker.attack -           defender.defense) * crit
+    damage = (attacker.get_weapon_attack() + attacker.attack -           defender.defense) * crit
     if damage <= 0:
         damage = 1
 
-    defender.health -= damage
+    defender.take_damage(damage)
 
     print(f"{attacker} dealt {damage} damage to {defender}.")
 
     print(f"{defender} current health: {defender.health}")
 
-    if defender.health <= 0:
-        defender.health = 0
+    if defender.is_dead():
         print(f"{defender} fainted.")
-        if isinstance(defender, Boss):
+        if isinstance(defender, character.Boss):
             return -888
         if isinstance(defender, character.Player):
-            defender.health = 0
             print("You fainted. Skill Issue.")
             return -666
         return True
