@@ -11,7 +11,11 @@ Result = tuple[Status, str]
 
 class Slot:
     """A slot in inventory stores one item type alongside a count"""
-    def __init__(self, item: item.Item, limit: int | None = None, count: int = 0):
+
+    def __init__(self,
+                 item: item.Item,
+                 limit: int | None = None,
+                 count: int = 0):
         self.item = item
         self.count = count
         self.limit = limit
@@ -60,6 +64,7 @@ class Slot:
 
 
 class GearSlot(Slot):
+
     def __init__(self, item: item.Item, limit: int = 1, count: int = 0):
         super().__init__(item, limit, count)
 
@@ -67,7 +72,9 @@ class GearSlot(Slot):
         """Returns a JSON-serializable dict"""
         return {"name": self.item.name, "desc": self.item.desc}
 
+
 class Inventory:
+
     def __init__(self, weight_limit: int):
         self.slots = {}
         self.weight_limit = weight_limit
@@ -75,7 +82,7 @@ class Inventory:
     def __getitem__(self, name: str) -> Slot:
         return self.slots[name]
 
-    def get(self, name: str, default = None) -> item.Item:
+    def get(self, name: str, default=None) -> item.Item:
         return self.slots.get(name, default)
 
     def items(self):
@@ -97,7 +104,7 @@ class Inventory:
             return (ERROR, "Will exceed backpack capacity")
         if item.name not in self.slots:
             return (OK, "Item can be stored")
-        return  self.slots[item.name].can_add(count)
+        return self.slots[item.name].can_add(count)
 
     def has(self, item: item.Item) -> bool:
         """Returns True if inventory contains item, otherwise False"""
@@ -142,10 +149,13 @@ class Combatant:
     attack: int
     defense: int
     speed: int
-    def __init__(self, name: str, attack: int, defense: int, speed: int):
+
+    def __init__(self, name: str, attack: int, defense: int, health: int,
+                 speed: int):
         self.name = name
         self.attack = attack
         self.defense = defense
+        self.health = health
         self.speed = speed
 
     def get_crit_chance(self) -> int:
@@ -168,15 +178,11 @@ class Combatant:
             self.health = 0
 
 
-class Player:
+class Player(Combatant):
 
     def __init__(self, name):
-        self.name = str(name)
-        self.health = 10
+        super().__init__(name, attack=1, defense=0, health=10, speed=1)
         self.max_health = self.health
-        self.defense = 0
-        self.attack = 1
-        self.speed = 1
         max_load = 10000000000000000000000
         self.items = Inventory(weight_limit=max_load)
         self.gears = {
@@ -202,10 +208,7 @@ class Player:
         return self.items.json()
 
     def json_gear(self):
-        return {
-            section: slot.json()
-            for section, slot in self.gears.items()
-        }
+        return {section: slot.json() for section, slot in self.gears.items()}
 
     def get_item(self, name: str) -> item.Item | None:
         return self.items.get(name)
@@ -249,51 +252,8 @@ class Player:
         print(f'{gear.name} unequipped')
         return True
 
-    def combat(self, enemy: "Enemy"):
-        print("\n")
-        time.sleep(0.5)
-        crit = 1  #if there is no crit does not change
 
-        if self.gears["weapon"].crit():
-            crit = 2  # double the damage when it crits
-
-        damage = (self.gears['weapon'].attack + self.attack -
-                  enemy.defense) * crit
-
-        if damage <= 0:
-            damage = 1
-
-        enemy.health -= damage
-
-        print(f"You dealt {damage} damage to the {enemy.name}.")
-
-        print(f"{enemy.name} current health:{enemy.health}")
-
-        if enemy.health <= 0:
-            enemy.health = 0
-            print(f"{enemy} fainted.")
-            if isinstance(enemy, Boss):
-                return -888
-            return True
-        else:
-            return False
-
-
-class Enemy:
-
-    def __init__(
-            self,
-            name: str,
-            health: int,
-            defense: int, 
-            attack: int,
-            speed: int
-    ):
-        self.name = name
-        self.health = health
-        self.defense = defense
-        self.attack = attack
-        self.speed = speed
+class Enemy(Combatant):
 
     def __repr__(self):
         return "E"
