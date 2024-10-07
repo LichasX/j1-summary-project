@@ -20,3 +20,14 @@ def gear(section_items: dict[str, dict | None]) -> None:
         else:
             print(f"{section}: {row['name']}")
         print("-----\n")
+
+def attack(attackoutcome: dict) -> None:
+    attacker = attackoutcome["attack"]
+    defender = attackoutcome["defender"]
+    damage = attackoutcome["damage"]
+    defender_dead = attackoutcome["defender_dead"]
+    print(f"{attacker["name"]} dealt {damage} damage to {defender["name"]}.")
+    print(f"{defender["name"]} current health: {defender["health"]}")
+
+    if defender_dead:
+        print(f"{defender["name"]} fainted.")

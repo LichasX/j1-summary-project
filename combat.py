@@ -50,18 +50,3 @@ def single_attack(attacker: character.Combatant,
     damage = calculate_damage(attacker, defender)
     defender.take_damage(damage)
     return AttackOutcome(attacker, defender, damage, defender.is_dead())
-
-    print(f"{attacker} dealt {damage} damage to {defender}.")
-
-    print(f"{defender} current health: {defender.health}")
-
-    if defender.is_dead():
-        print(f"{defender} fainted.")
-        if isinstance(defender, character.Boss):
-            return -888
-        if isinstance(defender, character.Player):
-            print("You fainted. Skill Issue.")
-            return -666
-        return True
-    else:
-        return False
