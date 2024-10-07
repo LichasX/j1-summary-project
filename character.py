@@ -156,6 +156,9 @@ class Combatant:
         """Get attack of equipped weapon; 0 if no weapon"""
         return 0
 
+    def is_dead(self) -> bool:
+        return self.health <= 0
+
     def take_damage(self, damage: int) -> None:
         """Subtracts damage from health.
         Health cannot go below 0.
