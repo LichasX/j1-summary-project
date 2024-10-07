@@ -49,7 +49,7 @@ def single_attack(attacker: character.Combatant,
                   defender: character.Combatant) -> AttackOutcome:
     damage = calculate_damage(attacker, defender)
     defender.take_damage(damage)
-    return AttackOutcome(attacker, defender, damage)
+    return AttackOutcome(attacker, defender, damage, defender.is_dead())
 
     print(f"{attacker} dealt {damage} damage to {defender}.")
 
