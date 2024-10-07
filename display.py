@@ -31,3 +31,14 @@ def attack(attackoutcome: dict) -> None:
 
     if defender_dead:
         print(f"{defender["name"]} fainted.")
+
+def map(mapdata: dict):
+    grid = mapdata["map"]
+    next_event = mapdata["next_event"]
+    print("\n-----\nMap\n\n")
+    for row in grid:
+        for char in grid:
+            print(char, end=" ")
+        print()  # line break
+    print(f"Next Event: {next_event}")
+    print("-----\n")
