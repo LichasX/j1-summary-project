@@ -1,12 +1,13 @@
-# Import statements
-# import time
-import math
 import random
 import time
-from colorama import Fore, Back, Style
+from colorama import Fore, Style
+
+
 def rng_generator():
-    x = random.randint(1,1000000)
+    x = random.randint(1, 1000000)
     return x
+
+
 def rng_game():
     x = rng_generator()
     if x > 500000:
@@ -33,6 +34,8 @@ def rng_game():
         return f"{Fore.GREEN}{Style.BRIGHT}INCOMPREHENSIBLE!!!! (1 in 40000)"
     elif x == 1:
         return f"{Fore.YELLOW}{Style.BRIGHT}JACKPOT!!!!!!! (1 in 1000000)"
+
+
 def loading_percentage():
     percentage = 0
     while percentage < 100:
@@ -40,34 +43,48 @@ def loading_percentage():
         percentage = percentage + x
         if percentage > 100:
             percentage = 100
-        print(f"Loading... ({percentage}% done)", end = "\r")
+        print(f"Loading... ({percentage}% done)", end="\r")
         time.sleep(0.5)
     time.sleep(1)
     print("Complete!!")
+
+
 def proceeding():
-    loading = [".","..","..."]
+    loading = [".", "..", "..."]
     for i in range(21):
-            n = i%3
-            print(f"Proceeding to the main game{loading[n]}  ", end = "\r")
-            time.sleep(0.25)
-    progress_bar = ["[]","[]","[]","[]","[]","[]","[]","[]","[]","[]","[]",]
+        n = i % 3
+        print(f"Proceeding to the main game{loading[n]}  ", end="\r")
+        time.sleep(0.25)
+    progress_bar = [
+        "[]",
+        "[]",
+        "[]",
+        "[]",
+        "[]",
+        "[]",
+        "[]",
+        "[]",
+        "[]",
+        "[]",
+        "[]",
+    ]
     for i in range(len(progress_bar)):
         progress_bar[i] = "֍ "
-        print("Internalizing" + " " + "".join(progress_bar), end = "\r")
+        print("Internalizing" + " " + "".join(progress_bar), end="\r")
         time.sleep(0.5)
     print("\r")
 
 
-
 def roll_animation():
-    roll_list = [f"{Style.RESET_ALL}Common (1 in 2)                            ",
-             f"{Fore.GREEN}{Style.NORMAL}Uncommon (1 in 4)                     ",
-             f"{Fore.BLUE}{Style.NORMAL}Rare (1 in 8)                         ",
-             f"{Fore.MAGENTA}{Style.NORMAL}Epic! (1 in 32)                 ",
-             f"{Fore.YELLOW}{Style.NORMAL}Lengendary! (1 in 64)             ",
-             f"{Fore.RED}{Style.NORMAL}Mythic!! (1 in 100)                          ",
-             f"{Fore.WHITE}{Style.DIM}Secret!! (1 in 2000)                      ",
-             f"{Fore.BLACK}{Style.BRIGHT}UNBELIVABLE!!! (1 in 10000)                        ",
-             f"{Fore.GREEN}{Style.BRIGHT}INCOMPREHENSIBLE!!!! (1 in 40000)       ",
-             f"{Fore.YELLOW}{Style.BRIGHT}JACKPOT!!!!!!! (1 in 1000000)                 "
-             ]
+    roll_list = [
+        f"{Style.RESET_ALL}Common (1 in 2)                            ",
+        f"{Fore.GREEN}{Style.NORMAL}Uncommon (1 in 4)                     ",
+        f"{Fore.BLUE}{Style.NORMAL}Rare (1 in 8)                         ",
+        f"{Fore.MAGENTA}{Style.NORMAL}Epic! (1 in 32)                 ",
+        f"{Fore.YELLOW}{Style.NORMAL}Lengendary! (1 in 64)             ",
+        f"{Fore.RED}{Style.NORMAL}Mythic!! (1 in 100)                          ",
+        f"{Fore.WHITE}{Style.DIM}Secret!! (1 in 2000)                      ",
+        f"{Fore.BLACK}{Style.BRIGHT}UNBELIVABLE!!! (1 in 10000)                        ",
+        f"{Fore.GREEN}{Style.BRIGHT}INCOMPREHENSIBLE!!!! (1 in 40000)       ",
+        f"{Fore.YELLOW}{Style.BRIGHT}JACKPOT!!!!!!! (1 in 1000000)                 "
+    ]

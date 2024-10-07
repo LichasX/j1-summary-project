@@ -1,0 +1,207 @@
+{
+    "player": {
+        "type": "Player",
+        "name": "Jian Lin",
+        "health": 10,
+        "attack": 1,
+        "defense": 0,
+        "speed": 1,
+        "max_load": 10000000000000000000000
+    },
+    "boss": {
+        "type": "Boss",
+        "name": "Overlord",
+        "health": 50,
+        "attack": 3,
+        "defense": 5,
+        "speed": 0.5
+    },
+    "enemy": {
+        "type": "Enemy",
+        "name": "Enemy",
+        "health": [3, 10],
+        "attack": [1, 2],
+        "defense": [1, 3],
+        "speed": 1
+    },
+    "weapons": {
+        "wooden_sword": {
+            "desc": "",
+            "attack": 3,
+            "critc": 5,
+            "name": "Wooden Sword",
+            "weight": 2
+        },
+        "stone_sword": {
+            "desc": "",
+            "attack": 5,
+            "critc": 5,
+            "name": "Stone Sword",
+            "weight": 3
+        },
+        "iron_sword": {
+            "desc": "",
+            "attack": 8,
+            "critc": 10,
+            "name": "Iron Sword",
+            "weight": 4
+        },
+        "steel_sword": {
+            "desc": "",
+            "attack": 12,
+            "critc": 8,
+            "name": "Steel Sword",
+            "weight": 5
+        },
+        "fire_blade": {
+            "desc": "",
+            "attack": 20,
+            "critc": 5,
+            "name": "Fire Blade",
+            "weight": 0
+        },
+        "ice_blade": {
+            "desc": "",
+            "attack": 12,
+            "critc": 50,
+            "name": "Ice Blade",
+            "weight": 2
+        },
+        "diamond_sword": {
+            "desc": "",
+            "attack": 25,
+            "critc": 12,
+            "name": "Diamond Sword",
+            "weight": 2
+        },
+        "forty_metre_long_sword": {
+            "desc": "",
+            "attack": 40,
+            "critc": 40,
+            "name": "40m-long-sword",
+            "weight": 40
+        },
+        "soul_stealer": {
+            "desc": "",
+            "attack": 5,
+            "critc": 5,
+            "name": "Soul Stealer",
+            "weight": 0
+        },
+        "ulti_blade": {
+            "desc": "",
+            "attack": 100000000000000,
+            "critc": 0,
+            "name": "Ulti-Blade",
+            "weight": 0
+        }
+    },
+    "armor": {
+        "iron_helmet": {
+            "section": "helm",
+            "desc": "",
+            "name": "Iron Helmet",
+            "defense": 2,
+            "weight": 10
+        },
+        "iron_chestplate": {
+            "section": "chest",
+            "desc": "",
+            "name": "Iron Chestplate",
+            "defense": 6,
+            "weight": 16
+        },
+        "iron_leggings": {
+            "section": "leg",
+            "desc": "",
+            "name": "Iron Leggings",
+            "defense": 4,
+            "weight": 14
+        },
+        "iron_boots": {
+            "section": "boots",
+            "desc": "",
+            "name": "Iron Boots",
+            "defense": 2,
+            "weight": 8
+        },
+        "diamond_helmet": {
+            "section": "helm",
+            "desc": "",
+            "name": "Diamond Helmet",
+            "defense": 3,
+            "weight": 5
+        },
+        "diamond_chestplate": {
+            "section": "chest",
+            "desc": "",
+            "name": "Diamond Chestplate",
+            "defense": 9,
+            "weight": 8
+        },
+        "diamond_leggings": {
+            "section": "leg",
+            "desc": "",
+            "name": "Diamond Leggings",
+            "defense": 6,
+            "weight": 7
+        },
+        "diamond_boots": {
+            "section": "boots",
+            "desc": "",
+            "name": "Diamond Boots",
+            "defense": 3,
+            "weight": 4
+        }
+    },
+    "potions": {
+        "lesser_healing_potion": {
+            "desc": "Heals 2 hp to the player",
+            "buff": 2,
+            "name": "Lesser Healing Potion",
+            "weight": 0
+        },
+        "normal_healing_potion": {
+            "desc": "Heals 5 hp to the player",
+            "buff": 5,
+            "name": "Normal Healing Potion",
+            "weight": 0
+        },
+        "greater_healing_potion": {
+            "desc": "Heals 10 hp to the player",
+            "buff": 10,
+            "name": "Greater Healing Potion",
+            "weight": 0
+        },
+        "supreme_healing_potion": {
+            "desc": "Heals 20 hp to the player",
+            "buff": 20,
+            "name": "Supreme Healing Potion",
+            "weight": 0
+        },
+        "strength_potion": {
+            "desc": "Add 10 att to the player's strength stats",
+            "buff": 10,
+            "name": "Strength Potion",
+            "weight": 0
+        },
+        "speed_potion": {
+            "desc": "Add 5 speed to the player's speed stats",
+            "buff": 5,
+            "name": "Speed Potion",
+            "weight": 0
+        },
+        "almond_potion": {
+            "desc": "Add 2 to each of the player's stat",
+            "buff": -0,
+            "name": "Almond Potion",
+            "weight": 0
+        },
+        "bleach": {
+            "desc": "Kills you instantly, toddler approved!",
+            "buff": -9999999999999,
+            "name": "Bleach",
+            "weight": 0
+        }
+    }
+}
