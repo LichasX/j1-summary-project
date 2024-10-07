@@ -11,7 +11,7 @@ def player_combat(player: character.Player, enemy: character.Enemy) -> bool | in
     if player.gears["weapon"].crit():
         crit = 2  # double the damage when it crits
 
-    damage = (player.gears['weapon'].attack + self.attack -
+    damage = (player.gears['weapon'].attack + player.attack -
               enemy.defense) * crit
 
     if damage <= 0:
@@ -73,5 +73,32 @@ def boss_combat(boss: character.Boss, player: character.Player) -> bool | int:
         player.health = 0
         print("You fainted. Skill Issue.")
         return -666
+    else:
+        return False
+
+def combat(attacker, defender):
+    crit = 1  #if there is no crit does not change
+    if isinstance(attacker, character.Player) and attacker.gears["weapon"].crit():
+        crit = 2
+    damage = (attacker.gears['weapon'].attack + attacker.attack -           defender.defense) * crit
+    if damage <= 0:
+        damage = 1
+
+    defender.health -= damage
+
+    print(f"{attacker} dealt {damage} damage to {defender}.")
+
+    print(f"{defender} current health: {defender.health}")
+
+    if defender.health <= 0:
+        defender.health = 0
+        print(f"{defender} fainted.")
+        if isinstance(defender, Boss):
+            return -888
+        if isinstance(defender, character.Player):
+            defender.health = 0
+            print("You fainted. Skill Issue.")
+            return -666
+        return True
     else:
         return False
