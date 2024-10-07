@@ -32,13 +32,18 @@ def attack(attackoutcome: dict) -> None:
     if defender_dead:
         print(f"{defender["name"]} fainted.")
 
-def map(mapdata: dict):
-    grid = mapdata["map"]
-    next_event = mapdata["next_event"]
-    print("\n-----\nMap\n\n")
+def show_map(mapdata: list[list[str]]) -> None:
+    """Display game map"""
     for row in grid:
         for char in grid:
             print(char, end=" ")
         print()  # line break
+
+def show_map_event(gamedata: dict):
+    """Display game map and next event"""
+    grid = gamedata["map"]
+    next_event = gamedata["next_event"]
+    print("\n-----\nMap\n\n")
+    show_map(grid)
     print(f"Next Event: {next_event}")
     print("-----\n")

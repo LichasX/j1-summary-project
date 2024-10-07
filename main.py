@@ -1,6 +1,7 @@
 import sys
 import time
 
+import display
 import game
 import script
 
@@ -21,6 +22,7 @@ def main():
     while not board.is_gameover():
         move = board.prompt_player()
         board.player_action(move)
+        display.map(game.json())
         board.printmap()
         board.check_event()
     if board.player.is_dead():
