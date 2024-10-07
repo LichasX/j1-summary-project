@@ -10,6 +10,16 @@ import script
 def random_coord(max_x: int, max_y: int) -> tuple[int, int]:
     return random.randint(0, max_x), random.randint(0, max_y)
 
+def create_player() -> character.Player:
+    return character.Player(
+        name=gamedata.player["name"],
+        health=gamedata.player["health"],
+        attack=gamedata.player["attack"],
+        defense=gamedata.player["defense"],
+        speed=gamedata.player["speed"],
+        max_load=gamedata.player["max_load"],
+    )
+
 def create_boss() -> character.Boss:
     return character.Boss(
         name=gamedata.boss["name"],
@@ -64,7 +74,7 @@ class Game:
         self.n = 5  #length of sides of grid
         self.e = 12  #num of enemies
         self.map = Map(self.n, self.n)
-        self.player = character.Player(name)
+        self.player = create_player()
         self.player_coord = (0, 0)
         self.player_last_move = None
         self.player_next_encounter = None
