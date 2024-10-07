@@ -101,7 +101,7 @@ def calculate_damage(attacker: character.Combatant,
     return damage
 
 
-def combat(attacker: character.Combatant, defender: character.Combatant):
+def single_attack(attacker: character.Combatant, defender: character.Combatant):
     damage = calculate_damage(attacker, defender)
     defender.take_damage(damage)
 

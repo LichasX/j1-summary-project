@@ -2,6 +2,7 @@ import random
 import sys
 
 import character
+import combat
 import display
 import gamedata
 import item
@@ -218,9 +219,7 @@ class Game:
         else:
             i = 1
         while not result:
-            result = turn_order[i].combat(
-                turn_order[i - 1]
-            )  #if i = 0 i.e. player, i - 1 will become -1 which points to enemy as intended
+            combat.single_attack(turn_order[i], turn_order[i - 1])
             if i == 1:
                 i = 0
             else:
