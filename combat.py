@@ -3,6 +3,26 @@ import random
 import character
 
 
+class AttackOutcome:
+
+    def __init__(
+        self,
+        attacker: character.Combatant,
+        defender: character.Combatant,
+        damage: int,
+    ):
+        self.attacker = attacker
+        self.defender = defender
+        self.damage = damage
+
+    def json(self) -> dict:
+        return {
+            "attacker": self.attacker.json(),
+            "defender": self.defender.json(),
+            "damage": self.damage
+        }
+
+
 def is_crit(critc: int, sides: int = 100) -> bool:
     """Simulates a dice roll to determine if the attack will crit."""
     assert sides > 0, "sides must be greater than 0"
@@ -22,9 +42,11 @@ def calculate_damage(attacker: character.Combatant,
     return damage
 
 
-def single_attack(attacker: character.Combatant, defender: character.Combatant):
+def single_attack(attacker: character.Combatant,
+                  defender: character.Combatant) -> AttackOutcome:
     damage = calculate_damage(attacker, defender)
     defender.take_damage(damage)
+    return AttackOutcome(attacker, defender, damage)
 
     print(f"{attacker} dealt {damage} damage to {defender}.")
 

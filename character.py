@@ -177,6 +177,16 @@ class Combatant:
         if self.health < 0:
             self.health = 0
 
+    def json(self) -> dict:
+        """Returns a JSON-serializable dict"""
+        return {
+            "name": self.name,
+            "attack": self.attack,
+            "defense": self.defense,
+            "health": self.health,
+            "speed": self.speed
+        }
+
 
 class Player(Combatant):
 
